@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bmco.cratesiounofficial.MainActivity;
 import com.bmco.cratesiounofficial.R;
 import com.bmco.cratesiounofficial.fragments.recyclers.NewCratesRecyclerAdapter;
 
@@ -29,13 +28,13 @@ public class NewCratesPageFragment extends Fragment {
         itemList.setLayoutManager(new LinearLayoutManager(itemList.getContext()));
         Thread waitThread = new Thread() {
             public void run() {
-                while(MainActivity.summary == null) {
+                while(SummaryFragment.summary == null) {
                     //ignore
                 }
                 itemList.post(new Runnable() {
                     @Override
                     public void run() {
-                        NewCratesRecyclerAdapter adapter = new NewCratesRecyclerAdapter(itemList.getContext(), MainActivity.summary.getNewCrates());
+                        NewCratesRecyclerAdapter adapter = new NewCratesRecyclerAdapter(itemList.getContext(), SummaryFragment.summary.getNewCrates());
                         itemList.setAdapter(adapter);
                     }
                 });

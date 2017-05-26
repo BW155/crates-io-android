@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bmco.cratesiounofficial.R;
-import com.bmco.cratesiounofficial.models.NewCrate;
+import com.bmco.cratesiounofficial.models.Crate;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -21,9 +21,9 @@ import java.util.List;
 public class NewCratesRecyclerAdapter extends RecyclerView.Adapter {
 
     private Context context;
-    private List<NewCrate> crates;
+    private List<Crate> crates;
 
-    public NewCratesRecyclerAdapter(Context context, List<NewCrate> crates) {
+    public NewCratesRecyclerAdapter(Context context, List<Crate> crates) {
         this.context = context;
         this.crates = crates;
     }
@@ -37,16 +37,18 @@ public class NewCratesRecyclerAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        NewCrate crate = crates.get(position);
+        Crate crate = crates.get(position);
 
         TextView crateName = (TextView) holder.itemView.findViewById(R.id.crate_title);
         TextView crateDescription = (TextView) holder.itemView.findViewById(R.id.crate_description);
         TextView crateDownloads = (TextView) holder.itemView.findViewById(R.id.crate_downloads);
+        TextView crateMaxVersion = (TextView) holder.itemView.findViewById(R.id.crate_max_version);
 
         crateName.setText(crate.getName());
         crateDescription.setText(crate.getDescription());
         DecimalFormat df = new DecimalFormat("#,##0");
         crateDownloads.setText(df.format(Long.valueOf(crate.getDownloads())));
+        crateMaxVersion.setText("v" + crate.getMaxVersion());
     }
 
     @Override

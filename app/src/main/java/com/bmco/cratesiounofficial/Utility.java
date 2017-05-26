@@ -23,19 +23,10 @@ import java.security.UnrecoverableKeyException;
 
 public class Utility {
     private static String BASE_URL = "https://crates.io/";
-    public static String SUMMARY = "summary?_="; /// + Timestamp in millis
+    public static String SUMMARY = "summary?_=%d"; /// + Timestamp in millis
+    public static String SEARCH = "api/v1/crates?page=%d&per_page=100&q=%s&sort=&_=%d";
 
     private static AsyncHttpClient client = new SyncHttpClient();
-
-    public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        try {
-            client.setSSLSocketFactory(new MySSLSocketFactory(MySSLSocketFactory.getKeystore()));
-            client.get(getAbsoluteUrl(url), params, responseHandler);
-        } catch (NoSuchAlgorithmException | KeyManagementException | KeyStoreException | UnrecoverableKeyException e) {
-            e.printStackTrace();
-            responseHandler.sendFailureMessage(0, null, null, e);
-        }
-    }
 
     public static void getSSL(String url, AsyncHttpResponseHandler responseHandler) {
         try {

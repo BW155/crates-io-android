@@ -1,12 +1,11 @@
 package com.bmco.cratesiounofficial;
 
-import android.app.ActionBar;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,17 +13,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.SearchView;
-import android.widget.Toast;
 
-import com.bmco.cratesiounofficial.models.Summary;
+import com.bmco.cratesiounofficial.fragments.SearchFragment;
+import com.bmco.cratesiounofficial.fragments.SummaryFragment;
+import com.bmco.cratesiounofficial.models.Crate;
 
-import java.io.IOException;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private ViewPager mTrendingPager;
-    public static Summary summary;
+    public static OnSearchResult result;
+
+    private NonSwipeableViewPager summarySearchPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,32 +43,32 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        mTrendingPager = (ViewPager) findViewById(R.id.trending_pager);
-        mTrendingPager.setAdapter(new TrendingPageAdapter(getSupportFragmentManager(),
-                MainActivity.this));
+        summarySearchPager = (NonSwipeableViewPager) findViewById(R.id.summary_search_pager);
+        summarySearchPager.setAdapter(new SummarySearchPageAdapter(getSupportFragmentManager()));
+    }
 
-        // Give the TabLayout the ViewPager
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
-        tabLayout.setupWithViewPager(mTrendingPager);
+    private class SummarySearchPageAdapter extends FragmentPagerAdapter {
 
-        Thread summaryThread = new Thread() {
-            public void run() {
-                try {
-                    Summary summary = CratesIONetworking.getSummary();
-                    System.out.println(summary);
-                    MainActivity.summary = summary;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    mTrendingPager.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(mTrendingPager.getContext(), "Can't load summary", Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
+        public SummarySearchPageAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                    return new SummaryFragment();
+                case 1:
+                    return new SearchFragment();
+                default:
+                    return null;
             }
-        };
-        summaryThread.start();
+        }
     }
 
     @Override
@@ -84,9 +85,46 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        final SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setQueryHint(getResources().getString(R.string.query_hint));
         searchView.setIconified(true);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(final String query) {
+                System.out.println("on search submit: " + query);
+                Thread searchThread = new Thread() {
+                    public void run() {
+                        result.needsClear();
+                        result.downloading();
+                        List<Crate> crates = CratesIONetworking.searchCrate(query, 1);
+                        for (Crate crate: crates) {
+                            result.onResult(crate);
+                        }
+                    }
+                };
+                searchThread.start();
+                MainActivity.result.onResult(new Crate());
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText.length() > 0) {
+                    if (summarySearchPager.getCurrentItem() != 1) {
+                        summarySearchPager.setCurrentItem(1, true);
+                    }
+                }
+                return false;
+            }
+        });
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                System.out.println("on search close");
+                summarySearchPager.setCurrentItem(0, true);
+                return false;
+            }
+        });
         return true;
     }
 
@@ -96,7 +134,6 @@ public class MainActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
 
         return super.onOptionsItemSelected(item);
     }

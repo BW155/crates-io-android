@@ -25,11 +25,11 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class Summary {
 
     @JsonProperty("just_updated")
-    private List<JustUpdated> justUpdated = new ArrayList<JustUpdated>();
+    private List<Crate> justUpdated = new ArrayList<Crate>();
     @JsonProperty("most_downloaded")
-    private List<MostDownloaded> mostDownloaded = new ArrayList<MostDownloaded>();
+    private List<Crate> mostDownloaded = new ArrayList<Crate>();
     @JsonProperty("new_crates")
-    private List<NewCrate> newCrates = new ArrayList<NewCrate>();
+    private List<Crate> newCrates = new ArrayList<Crate>();
     @JsonProperty("num_crates")
     private int numCrates;
     @JsonProperty("num_downloads")
@@ -42,32 +42,32 @@ public class Summary {
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     @JsonProperty("just_updated")
-    public List<JustUpdated> getJustUpdated() {
+    public List<Crate> getJustUpdated() {
         return justUpdated;
     }
 
     @JsonProperty("just_updated")
-    public void setJustUpdated(List<JustUpdated> justUpdated) {
+    public void setJustUpdated(List<Crate> justUpdated) {
         this.justUpdated = justUpdated;
     }
 
     @JsonProperty("most_downloaded")
-    public List<MostDownloaded> getMostDownloaded() {
+    public List<Crate> getMostDownloaded() {
         return mostDownloaded;
     }
 
     @JsonProperty("most_downloaded")
-    public void setMostDownloaded(List<MostDownloaded> mostDownloaded) {
+    public void setMostDownloaded(List<Crate> mostDownloaded) {
         this.mostDownloaded = mostDownloaded;
     }
 
     @JsonProperty("new_crates")
-    public List<NewCrate> getNewCrates() {
+    public List<Crate> getNewCrates() {
         return newCrates;
     }
 
     @JsonProperty("new_crates")
-    public void setNewCrates(List<NewCrate> newCrates) {
+    public void setNewCrates(List<Crate> newCrates) {
         this.newCrates = newCrates;
     }
 

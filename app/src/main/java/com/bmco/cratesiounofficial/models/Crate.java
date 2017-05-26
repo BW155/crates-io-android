@@ -30,7 +30,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "updated_at",
     "versions"
 })
-public class NewCrate {
+public class Crate {
 
     @JsonProperty("badges")
     private Object badges;
