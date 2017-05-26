@@ -20,34 +20,54 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class PopularKeyword {
 
     @JsonProperty("crates_cnt")
-    public int cratesCnt;
+    private int cratesCnt;
     @JsonProperty("created_at")
-    public String createdAt;
+    private String createdAt;
     @JsonProperty("id")
-    public String id;
+    private String id;
     @JsonProperty("keyword")
-    public String keyword;
+    private String keyword;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    public PopularKeyword withCratesCnt(int cratesCnt) {
+    @JsonProperty("crates_cnt")
+    public int getCratesCnt() {
+        return cratesCnt;
+    }
+
+    @JsonProperty("crates_cnt")
+    public void setCratesCnt(int cratesCnt) {
         this.cratesCnt = cratesCnt;
-        return this;
     }
 
-    public PopularKeyword withCreatedAt(String createdAt) {
+    @JsonProperty("created_at")
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    @JsonProperty("created_at")
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
-        return this;
     }
 
-    public PopularKeyword withId(String id) {
+    @JsonProperty("id")
+    public String getId() {
+        return id;
+    }
+
+    @JsonProperty("id")
+    public void setId(String id) {
         this.id = id;
-        return this;
     }
 
-    public PopularKeyword withKeyword(String keyword) {
+    @JsonProperty("keyword")
+    public String getKeyword() {
+        return keyword;
+    }
+
+    @JsonProperty("keyword")
+    public void setKeyword(String keyword) {
         this.keyword = keyword;
-        return this;
     }
 
     @JsonAnyGetter
@@ -58,11 +78,6 @@ public class PopularKeyword {
     @JsonAnySetter
     public void setAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
-    }
-
-    public PopularKeyword withAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-        return this;
     }
 
 }

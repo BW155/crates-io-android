@@ -22,48 +22,78 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class PopularCategory {
 
     @JsonProperty("category")
-    public String category;
+    private String category;
     @JsonProperty("crates_cnt")
-    public int cratesCnt;
+    private int cratesCnt;
     @JsonProperty("created_at")
-    public String createdAt;
+    private String createdAt;
     @JsonProperty("description")
-    public String description;
+    private String description;
     @JsonProperty("id")
-    public String id;
+    private String id;
     @JsonProperty("slug")
-    public String slug;
+    private String slug;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    public PopularCategory withCategory(String category) {
+    @JsonProperty("category")
+    public String getCategory() {
+        return category;
+    }
+
+    @JsonProperty("category")
+    public void setCategory(String category) {
         this.category = category;
-        return this;
     }
 
-    public PopularCategory withCratesCnt(int cratesCnt) {
+    @JsonProperty("crates_cnt")
+    public int getCratesCnt() {
+        return cratesCnt;
+    }
+
+    @JsonProperty("crates_cnt")
+    public void setCratesCnt(int cratesCnt) {
         this.cratesCnt = cratesCnt;
-        return this;
     }
 
-    public PopularCategory withCreatedAt(String createdAt) {
+    @JsonProperty("created_at")
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    @JsonProperty("created_at")
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
-        return this;
     }
 
-    public PopularCategory withDescription(String description) {
+    @JsonProperty("description")
+    public String getDescription() {
+        return description;
+    }
+
+    @JsonProperty("description")
+    public void setDescription(String description) {
         this.description = description;
-        return this;
     }
 
-    public PopularCategory withId(String id) {
+    @JsonProperty("id")
+    public String getId() {
+        return id;
+    }
+
+    @JsonProperty("id")
+    public void setId(String id) {
         this.id = id;
-        return this;
     }
 
-    public PopularCategory withSlug(String slug) {
+    @JsonProperty("slug")
+    public String getSlug() {
+        return slug;
+    }
+
+    @JsonProperty("slug")
+    public void setSlug(String slug) {
         this.slug = slug;
-        return this;
     }
 
     @JsonAnyGetter
@@ -74,11 +104,6 @@ public class PopularCategory {
     @JsonAnySetter
     public void setAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
-    }
-
-    public PopularCategory withAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-        return this;
     }
 
 }

@@ -33,125 +33,210 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class JustUpdated {
 
     @JsonProperty("badges")
-    public Object badges;
+    private Object badges;
     @JsonProperty("categories")
-    public Object categories;
+    private Object categories;
     @JsonProperty("created_at")
-    public String createdAt;
+    private String createdAt;
     @JsonProperty("description")
-    public String description;
+    private String description;
     @JsonProperty("documentation")
-    public String documentation;
+    private String documentation;
     @JsonProperty("downloads")
-    public int downloads;
+    private int downloads;
     @JsonProperty("exact_match")
-    public boolean exactMatch;
+    private boolean exactMatch;
     @JsonProperty("homepage")
-    public Object homepage;
+    private Object homepage;
     @JsonProperty("id")
-    public String id;
+    private String id;
     @JsonProperty("keywords")
-    public Object keywords;
+    private Object keywords;
     @JsonProperty("license")
-    public String license;
+    private String license;
     @JsonProperty("links")
-    public Links links;
+    private Links links;
     @JsonProperty("max_version")
-    public String maxVersion;
+    private String maxVersion;
     @JsonProperty("name")
-    public String name;
+    private String name;
     @JsonProperty("repository")
-    public String repository;
+    private String repository;
     @JsonProperty("updated_at")
-    public String updatedAt;
+    private String updatedAt;
     @JsonProperty("versions")
-    public Object versions;
+    private Object versions;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    public JustUpdated withBadges(Object badges) {
+    @JsonProperty("badges")
+    public Object getBadges() {
+        return badges;
+    }
+
+    @JsonProperty("badges")
+    public void setBadges(Object badges) {
         this.badges = badges;
-        return this;
     }
 
-    public JustUpdated withCategories(Object categories) {
+    @JsonProperty("categories")
+    public Object getCategories() {
+        return categories;
+    }
+
+    @JsonProperty("categories")
+    public void setCategories(Object categories) {
         this.categories = categories;
-        return this;
     }
 
-    public JustUpdated withCreatedAt(String createdAt) {
+    @JsonProperty("created_at")
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    @JsonProperty("created_at")
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
-        return this;
     }
 
-    public JustUpdated withDescription(String description) {
+    @JsonProperty("description")
+    public String getDescription() {
+        return description;
+    }
+
+    @JsonProperty("description")
+    public void setDescription(String description) {
         this.description = description;
-        return this;
     }
 
-    public JustUpdated withDocumentation(String documentation) {
+    @JsonProperty("documentation")
+    public String getDocumentation() {
+        return documentation;
+    }
+
+    @JsonProperty("documentation")
+    public void setDocumentation(String documentation) {
         this.documentation = documentation;
-        return this;
     }
 
-    public JustUpdated withDownloads(int downloads) {
+    @JsonProperty("downloads")
+    public int getDownloads() {
+        return downloads;
+    }
+
+    @JsonProperty("downloads")
+    public void setDownloads(int downloads) {
         this.downloads = downloads;
-        return this;
     }
 
-    public JustUpdated withExactMatch(boolean exactMatch) {
+    @JsonProperty("exact_match")
+    public boolean isExactMatch() {
+        return exactMatch;
+    }
+
+    @JsonProperty("exact_match")
+    public void setExactMatch(boolean exactMatch) {
         this.exactMatch = exactMatch;
-        return this;
     }
 
-    public JustUpdated withHomepage(Object homepage) {
+    @JsonProperty("homepage")
+    public Object getHomepage() {
+        return homepage;
+    }
+
+    @JsonProperty("homepage")
+    public void setHomepage(Object homepage) {
         this.homepage = homepage;
-        return this;
     }
 
-    public JustUpdated withId(String id) {
+    @JsonProperty("id")
+    public String getId() {
+        return id;
+    }
+
+    @JsonProperty("id")
+    public void setId(String id) {
         this.id = id;
-        return this;
     }
 
-    public JustUpdated withKeywords(Object keywords) {
+    @JsonProperty("keywords")
+    public Object getKeywords() {
+        return keywords;
+    }
+
+    @JsonProperty("keywords")
+    public void setKeywords(Object keywords) {
         this.keywords = keywords;
-        return this;
     }
 
-    public JustUpdated withLicense(String license) {
+    @JsonProperty("license")
+    public String getLicense() {
+        return license;
+    }
+
+    @JsonProperty("license")
+    public void setLicense(String license) {
         this.license = license;
-        return this;
     }
 
-    public JustUpdated withLinks(Links links) {
+    @JsonProperty("links")
+    public Links getLinks() {
+        return links;
+    }
+
+    @JsonProperty("links")
+    public void setLinks(Links links) {
         this.links = links;
-        return this;
     }
 
-    public JustUpdated withMaxVersion(String maxVersion) {
+    @JsonProperty("max_version")
+    public String getMaxVersion() {
+        return maxVersion;
+    }
+
+    @JsonProperty("max_version")
+    public void setMaxVersion(String maxVersion) {
         this.maxVersion = maxVersion;
-        return this;
     }
 
-    public JustUpdated withName(String name) {
+    @JsonProperty("name")
+    public String getName() {
+        return name;
+    }
+
+    @JsonProperty("name")
+    public void setName(String name) {
         this.name = name;
-        return this;
     }
 
-    public JustUpdated withRepository(String repository) {
+    @JsonProperty("repository")
+    public String getRepository() {
+        return repository;
+    }
+
+    @JsonProperty("repository")
+    public void setRepository(String repository) {
         this.repository = repository;
-        return this;
     }
 
-    public JustUpdated withUpdatedAt(String updatedAt) {
+    @JsonProperty("updated_at")
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    @JsonProperty("updated_at")
+    public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
-        return this;
     }
 
-    public JustUpdated withVersions(Object versions) {
+    @JsonProperty("versions")
+    public Object getVersions() {
+        return versions;
+    }
+
+    @JsonProperty("versions")
+    public void setVersions(Object versions) {
         this.versions = versions;
-        return this;
     }
 
     @JsonAnyGetter
@@ -162,11 +247,6 @@ public class JustUpdated {
     @JsonAnySetter
     public void setAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
-    }
-
-    public JustUpdated withAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-        return this;
     }
 
 }

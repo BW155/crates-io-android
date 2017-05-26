@@ -20,34 +20,54 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class Links {
 
     @JsonProperty("owners")
-    public String owners;
+    private String owners;
     @JsonProperty("reverse_dependencies")
-    public String reverseDependencies;
+    private String reverseDependencies;
     @JsonProperty("version_downloads")
-    public String versionDownloads;
+    private String versionDownloads;
     @JsonProperty("versions")
-    public String versions;
+    private String versions;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    public Links withOwners(String owners) {
+    @JsonProperty("owners")
+    public String getOwners() {
+        return owners;
+    }
+
+    @JsonProperty("owners")
+    public void setOwners(String owners) {
         this.owners = owners;
-        return this;
     }
 
-    public Links withReverseDependencies(String reverseDependencies) {
+    @JsonProperty("reverse_dependencies")
+    public String getReverseDependencies() {
+        return reverseDependencies;
+    }
+
+    @JsonProperty("reverse_dependencies")
+    public void setReverseDependencies(String reverseDependencies) {
         this.reverseDependencies = reverseDependencies;
-        return this;
     }
 
-    public Links withVersionDownloads(String versionDownloads) {
+    @JsonProperty("version_downloads")
+    public String getVersionDownloads() {
+        return versionDownloads;
+    }
+
+    @JsonProperty("version_downloads")
+    public void setVersionDownloads(String versionDownloads) {
         this.versionDownloads = versionDownloads;
-        return this;
     }
 
-    public Links withVersions(String versions) {
+    @JsonProperty("versions")
+    public String getVersions() {
+        return versions;
+    }
+
+    @JsonProperty("versions")
+    public void setVersions(String versions) {
         this.versions = versions;
-        return this;
     }
 
     @JsonAnyGetter
@@ -58,11 +78,6 @@ public class Links {
     @JsonAnySetter
     public void setAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
-    }
-
-    public Links withAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-        return this;
     }
 
 }

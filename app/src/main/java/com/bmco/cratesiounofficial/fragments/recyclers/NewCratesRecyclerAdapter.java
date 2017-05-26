@@ -1,0 +1,62 @@
+package com.bmco.cratesiounofficial.fragments.recyclers;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.bmco.cratesiounofficial.R;
+import com.bmco.cratesiounofficial.models.NewCrate;
+
+import java.text.DecimalFormat;
+import java.util.List;
+
+/**
+ * Created by Bertus on 25-5-2017.
+ */
+
+public class NewCratesRecyclerAdapter extends RecyclerView.Adapter {
+
+    private Context context;
+    private List<NewCrate> crates;
+
+    public NewCratesRecyclerAdapter(Context context, List<NewCrate> crates) {
+        this.context = context;
+        this.crates = crates;
+    }
+
+    @Override
+    @SuppressLint("InflateParams")
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.crate_item, null);
+        return new CustomViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        NewCrate crate = crates.get(position);
+
+        TextView crateName = (TextView) holder.itemView.findViewById(R.id.crate_title);
+        TextView crateDescription = (TextView) holder.itemView.findViewById(R.id.crate_description);
+        TextView crateDownloads = (TextView) holder.itemView.findViewById(R.id.crate_downloads);
+
+        crateName.setText(crate.getName());
+        crateDescription.setText(crate.getDescription());
+        DecimalFormat df = new DecimalFormat("#,##0");
+        crateDownloads.setText(df.format(Long.valueOf(crate.getDownloads())));
+    }
+
+    @Override
+    public int getItemCount() {
+        return crates.size();
+    }
+
+    private static class CustomViewHolder extends RecyclerView.ViewHolder {
+        CustomViewHolder(View itemView) {
+            super(itemView);
+        }
+    }
+}

@@ -14,11 +14,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.SearchView;
+import android.widget.Toast;
+
+import com.bmco.cratesiounofficial.models.Summary;
+
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private ViewPager mTrendingPager;
+    public static Summary summary;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +49,25 @@ public class MainActivity extends AppCompatActivity
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(mTrendingPager);
+
+        Thread summaryThread = new Thread() {
+            public void run() {
+                try {
+                    Summary summary = CratesIONetworking.getSummary();
+                    System.out.println(summary);
+                    MainActivity.summary = summary;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    mTrendingPager.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(mTrendingPager.getContext(), "Can't load summary", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            }
+        };
+        summaryThread.start();
     }
 
     @Override

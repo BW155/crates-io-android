@@ -4,6 +4,12 @@ import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.bmco.cratesiounofficial.fragments.JustUpdatedPageFragment;
+import com.bmco.cratesiounofficial.fragments.MostDownloadedPageFragment;
+import com.bmco.cratesiounofficial.fragments.NewCratesPageFragment;
+import com.bmco.cratesiounofficial.fragments.PopularCategoriesPageFragment;
+import com.bmco.cratesiounofficial.fragments.PopularKeywordsPageFragment;
+
 /**
  * Created by Bertus on 25-5-2017.
  */
@@ -25,7 +31,20 @@ public class TrendingPageAdapter extends FragmentPagerAdapter {
 
     @Override
     public android.support.v4.app.Fragment getItem(int position) {
-        return TrendingPageFragment.newInstance(position + 1);
+        switch (position) {
+            case 0:
+                return new NewCratesPageFragment();
+            case 1:
+                return new MostDownloadedPageFragment();
+            case 2:
+                return new JustUpdatedPageFragment();
+            case 3:
+                return PopularKeywordsPageFragment.newInstance(position);
+            case 4:
+                return PopularCategoriesPageFragment.newInstance(position);
+            default:
+                return null;
+        }
     }
 
     @Override

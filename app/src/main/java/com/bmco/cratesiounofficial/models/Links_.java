@@ -20,34 +20,54 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class Links_ {
 
     @JsonProperty("owners")
-    public String owners;
+    private String owners;
     @JsonProperty("reverse_dependencies")
-    public String reverseDependencies;
+    private String reverseDependencies;
     @JsonProperty("version_downloads")
-    public String versionDownloads;
+    private String versionDownloads;
     @JsonProperty("versions")
-    public String versions;
+    private String versions;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    public Links_ withOwners(String owners) {
+    @JsonProperty("owners")
+    public String getOwners() {
+        return owners;
+    }
+
+    @JsonProperty("owners")
+    public void setOwners(String owners) {
         this.owners = owners;
-        return this;
     }
 
-    public Links_ withReverseDependencies(String reverseDependencies) {
+    @JsonProperty("reverse_dependencies")
+    public String getReverseDependencies() {
+        return reverseDependencies;
+    }
+
+    @JsonProperty("reverse_dependencies")
+    public void setReverseDependencies(String reverseDependencies) {
         this.reverseDependencies = reverseDependencies;
-        return this;
     }
 
-    public Links_ withVersionDownloads(String versionDownloads) {
+    @JsonProperty("version_downloads")
+    public String getVersionDownloads() {
+        return versionDownloads;
+    }
+
+    @JsonProperty("version_downloads")
+    public void setVersionDownloads(String versionDownloads) {
         this.versionDownloads = versionDownloads;
-        return this;
     }
 
-    public Links_ withVersions(String versions) {
+    @JsonProperty("versions")
+    public String getVersions() {
+        return versions;
+    }
+
+    @JsonProperty("versions")
+    public void setVersions(String versions) {
         this.versions = versions;
-        return this;
     }
 
     @JsonAnyGetter
@@ -58,11 +78,6 @@ public class Links_ {
     @JsonAnySetter
     public void setAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
-    }
-
-    public Links_ withAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-        return this;
     }
 
 }
