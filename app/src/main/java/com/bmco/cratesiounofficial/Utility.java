@@ -24,19 +24,19 @@ import java.security.UnrecoverableKeyException;
 public class Utility {
     private static String BASE_URL = "https://crates.io/";
     public static String SUMMARY = "summary?_=%d"; /// + Timestamp in millis
-    public static String SEARCH = "api/v1/crates?page=%d&per_page=100&q=%s&sort=&_=%d";
-
-    private static AsyncHttpClient client = new SyncHttpClient();
+    public static String SEARCH = "api/v1/crates?page=%d&per_page=100&q=%s&sort=&_=%d"; /// where 1: page number, 2: query, 3: sort type
+    public static String DEPENDENCIES = "api/v1/crates/%s/%s/dependencies"; /// where 1: crate id
+    public static String CRATE = "api/v1/crates/%s"; /// where 1: crate id
 
     public static void getSSL(String url, AsyncHttpResponseHandler responseHandler) {
         try {
             URL page = new URL(getAbsoluteUrl(url)); // Process the URL far enough to find the right handler
-            URLConnection urlc = page.openConnection();
-            urlc.setUseCaches(false); // Don't look at possibly cached data
-            System.out.println("Content-type = " + urlc.getContentType()); // See what's here
-            System.out.println("Content-length = " + urlc.getContentLength()); // See how much of it there is
+            URLConnection urlConnection = page.openConnection();
+            urlConnection.setUseCaches(false); // Don't look at possibly cached data
+            System.out.println("Content-type = " + urlConnection.getContentType()); // See what's here
+            System.out.println("Content-length = " + urlConnection.getContentLength()); // See how much of it there is
             // Read it all and print it out
-            BufferedReader br = new BufferedReader(new InputStreamReader(urlc.getInputStream()));
+            BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
             String buffer = "";
             String line;
             while ((line = br.readLine()) != null) {

@@ -1,5 +1,6 @@
 package com.bmco.cratesiounofficial;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -7,24 +8,33 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.bmco.cratesiounofficial.fragments.SearchFragment;
 import com.bmco.cratesiounofficial.fragments.SummaryFragment;
 import com.bmco.cratesiounofficial.models.Crate;
+import com.bmco.cratesiounofficial.models.Summary;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static OnSearchResult result;
+    public static OnResult result;
 
+
+    private TextView downloads, crates;
     private NonSwipeableViewPager summarySearchPager;
 
     @Override
@@ -37,14 +47,40 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View header = navigationView.getHeaderView(0);
 
         summarySearchPager = (NonSwipeableViewPager) findViewById(R.id.summary_search_pager);
         summarySearchPager.setAdapter(new SummarySearchPageAdapter(getSupportFragmentManager()));
+
+        TextView url = (TextView) header.findViewById(R.id.url);
+        downloads = (TextView) header.findViewById(R.id.downloads);
+        crates = (TextView) header.findViewById(R.id.crates);
+
+        url.setMovementMethod(LinkMovementMethod.getInstance());
+
+        SummaryFragment.listener.add( new OnSummaryChangeListener() {
+            @Override
+            public void summary(final Summary summary) {
+                crates.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        DecimalFormat df = new DecimalFormat("#,##0");
+                        crates.setText(df.format(Long.valueOf(summary.getNumCrates())));
+                        downloads.setText(df.format(Long.valueOf(summary.getNumDownloads())));
+                    }
+                });
+            }
+
+            @Override
+            public void downloadStarted() {
+
+            }
+        });
     }
 
     private class SummarySearchPageAdapter extends FragmentPagerAdapter {
@@ -100,6 +136,12 @@ public class MainActivity extends AppCompatActivity
                         for (Crate crate: crates) {
                             result.onResult(crate);
                         }
+                        searchView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                searchView.clearFocus();
+                            }
+                        });
                     }
                 };
                 searchThread.start();
@@ -135,6 +177,8 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -144,7 +188,18 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-
+        if (id == R.id.action_about) {
+            AlertDialog dialog = new AlertDialog.Builder(this).create();
+            dialog.setTitle("About");
+            dialog.setMessage(getResources().getString(R.string.about));
+            dialog.setButton(DialogInterface.BUTTON_POSITIVE, "OKE", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

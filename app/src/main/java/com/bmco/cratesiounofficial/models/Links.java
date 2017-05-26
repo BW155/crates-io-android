@@ -1,6 +1,7 @@
 
 package com.bmco.cratesiounofficial.models;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
@@ -17,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "version_downloads",
     "versions"
 })
-public class Links {
+public class Links implements Serializable{
 
     @JsonProperty("owners")
     private String owners;

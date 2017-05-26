@@ -1,6 +1,7 @@
 package com.bmco.cratesiounofficial;
 
 import com.bmco.cratesiounofficial.models.Crate;
+import com.bmco.cratesiounofficial.models.Dependency;
 import com.bmco.cratesiounofficial.models.Summary;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -95,6 +96,7 @@ public class CratesIONetworking {
             for (int i = 0; i < crates.length(); i++) {
                 String jsonCrate = crates.getJSONObject(i).toString();
                 Crate crate = mapper.readValue(jsonCrate, Crate.class);
+                crate.getDependencies(null);
                 crateList.add(crate);
             }
             return crateList;
@@ -102,5 +104,93 @@ public class CratesIONetworking {
             e.printStackTrace();
         }
         return new ArrayList<>();
+    }
+
+    public static List<Dependency> getDependenciesForCrate(String id, String version) {
+        String url = String.format(Locale.US, Utility.DEPENDENCIES, id, version);
+
+        final String[] result = new String[1];
+        Utility.getSSL(url, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                if (responseBody.length > 0) {
+                    result[0] = new String(responseBody);
+                } else {
+                    result[0] = "ERROR";
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                if (responseBody.length > 0) {
+                    result[0] = new String(responseBody);
+                } else {
+                    result[0] = "ERROR";
+                }
+            }
+        });
+
+        while (result[0] == null) {
+            //ignore
+        }
+
+        try {
+            JSONObject jResult = new JSONObject(result[0]);
+            JSONArray dependencies = jResult.getJSONArray("dependencies");
+
+            ObjectMapper mapper = new ObjectMapper();
+            List<Dependency> dependencyList = new ArrayList<>();
+
+            for (int i = 0; i < dependencies.length(); i++) {
+                String jsonDependency = dependencies.getJSONObject(i).toString();
+                Dependency dependency = mapper.readValue(jsonDependency, Dependency.class);
+                dependencyList.add(dependency);
+            }
+            return dependencyList;
+        } catch (JSONException | IOException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
+
+    public static Crate getCrateById(String id) {
+        String url = String.format(Locale.US, Utility.CRATE, id);
+
+        final String[] result = new String[1];
+        Utility.getSSL(url, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                if (responseBody.length > 0) {
+                    result[0] = new String(responseBody);
+                } else {
+                    result[0] = "ERROR";
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                if (responseBody.length > 0) {
+                    result[0] = new String(responseBody);
+                } else {
+                    result[0] = "ERROR";
+                }
+            }
+        });
+
+        while (result[0] == null) {
+            //ignore
+        }
+
+        try {
+            JSONObject jResult = new JSONObject(result[0]);
+            JSONObject crate = jResult.getJSONObject("crate");
+
+            ObjectMapper mapper = new ObjectMapper();
+
+            return mapper.readValue(crate.toString(), Crate.class);
+        } catch (JSONException | IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

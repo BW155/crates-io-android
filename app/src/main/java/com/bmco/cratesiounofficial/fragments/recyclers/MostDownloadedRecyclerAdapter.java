@@ -2,12 +2,14 @@ package com.bmco.cratesiounofficial.fragments.recyclers;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bmco.cratesiounofficial.CrateActivity;
 import com.bmco.cratesiounofficial.R;
 import com.bmco.cratesiounofficial.models.Crate;
 
@@ -37,7 +39,7 @@ public class MostDownloadedRecyclerAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        Crate crate = crates.get(position);
+        final Crate crate = crates.get(position);
 
         TextView crateName = (TextView) holder.itemView.findViewById(R.id.crate_title);
         TextView crateDescription = (TextView) holder.itemView.findViewById(R.id.crate_description);
@@ -49,6 +51,15 @@ public class MostDownloadedRecyclerAdapter extends RecyclerView.Adapter {
         DecimalFormat df = new DecimalFormat("#,##0");
         crateDownloads.setText(df.format(Long.valueOf(crate.getDownloads())));
         crateMaxVersion.setText("v" + crate.getMaxVersion());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, CrateActivity.class);
+                intent.putExtra("crate", crate);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

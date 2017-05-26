@@ -1,8 +1,14 @@
 
 package com.bmco.cratesiounofficial.models;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import com.bmco.cratesiounofficial.CratesIONetworking;
+import com.bmco.cratesiounofficial.OnDependencyDownloadListener;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -30,7 +36,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "updated_at",
     "versions"
 })
-public class Crate {
+public class Crate implements Serializable {
 
     @JsonProperty("badges")
     private Object badges;
@@ -55,7 +61,7 @@ public class Crate {
     @JsonProperty("license")
     private String license;
     @JsonProperty("links")
-    private Links__ links;
+    private Links links;
     @JsonProperty("max_version")
     private String maxVersion;
     @JsonProperty("name")
@@ -68,6 +74,8 @@ public class Crate {
     private Object versions;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+
+    private List<Dependency> dependencies;
 
     @JsonProperty("badges")
     public Object getBadges() {
@@ -180,12 +188,12 @@ public class Crate {
     }
 
     @JsonProperty("links")
-    public Links__ getLinks() {
+    public Links getLinks() {
         return links;
     }
 
     @JsonProperty("links")
-    public void setLinks(Links__ links) {
+    public void setLinks(Links links) {
         this.links = links;
     }
 
@@ -249,4 +257,22 @@ public class Crate {
         this.additionalProperties.put(name, value);
     }
 
+    public void getDependencies(final OnDependencyDownloadListener listener) {
+        if (this.dependencies == null) {
+            final String finalId = this.getId();
+            final String finalVersion = this.getMaxVersion();
+            Thread depThread = new Thread() {
+                public void run() {
+                    List<Dependency> dependencies = CratesIONetworking.getDependenciesForCrate(finalId, finalVersion);
+                    Crate.this.dependencies = dependencies;
+                    if (listener != null) {
+                        listener.onDependenciesReady(dependencies);
+                    }
+                }
+            };
+            depThread.start();
+        } else {
+            listener.onDependenciesReady(this.dependencies);
+        }
+    }
 }

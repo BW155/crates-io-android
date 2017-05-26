@@ -15,7 +15,7 @@ import com.bmco.cratesiounofficial.fragments.PopularKeywordsPageFragment;
  */
 
 public class TrendingPageAdapter extends FragmentPagerAdapter {
-    final int PAGE_COUNT = 5;
+    final int PAGE_COUNT = 3;
     private String tabTitles[] = new String[] { "New Crates", "Most Downloaded", "Just Updated", "Popular Keywords", "Popular Categories" };
     private Context context;
 

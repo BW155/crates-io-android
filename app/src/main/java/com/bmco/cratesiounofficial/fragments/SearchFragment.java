@@ -7,9 +7,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.bmco.cratesiounofficial.MainActivity;
-import com.bmco.cratesiounofficial.OnSearchResult;
+import com.bmco.cratesiounofficial.OnResult;
 import com.bmco.cratesiounofficial.R;
 import com.bmco.cratesiounofficial.fragments.recyclers.SearchRecyclerAdapter;
 import com.bmco.cratesiounofficial.models.Crate;
@@ -21,19 +22,27 @@ import com.bmco.cratesiounofficial.models.Crate;
 public class SearchFragment extends Fragment {
     private RecyclerView itemList;
     private SearchRecyclerAdapter adapter;
+    private ProgressBar progressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.trending_page, container, false);
         itemList = (RecyclerView) view.findViewById(R.id.recycler);
+        progressBar = (ProgressBar) view.findViewById(R.id.progress);
         adapter = new SearchRecyclerAdapter(itemList.getContext());
-        MainActivity.result = new OnSearchResult() {
+        MainActivity.result = new OnResult() {
             @Override
             public void onResult(final Crate crate) {
                 itemList.post(new Runnable() {
                     @Override
                     public void run() {
+                        progressBar.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressBar.setVisibility(View.GONE);
+                            }
+                        });
                         adapter.tryAddCrate(crate);
                     }
                 });
@@ -51,7 +60,12 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void downloading() {
-
+                progressBar.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.setVisibility(View.VISIBLE);
+                    }
+                });
             }
         };
         itemList.setLayoutManager(new LinearLayoutManager(itemList.getContext()));
