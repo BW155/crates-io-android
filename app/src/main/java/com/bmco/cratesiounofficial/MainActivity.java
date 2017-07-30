@@ -1,6 +1,7 @@
 package com.bmco.cratesiounofficial;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -8,7 +9,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -33,13 +33,18 @@ public class MainActivity extends AppCompatActivity
 
     public static OnResult result;
 
-
+    private SearchView searchView;
     private TextView downloads, crates;
     private NonSwipeableViewPager summarySearchPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Utility.InitSaveLoad(this);
+
+        Intent i = new Intent(this, CrateNotifier.class);
+        startService(i);
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -113,7 +118,13 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            if (summarySearchPager.getCurrentItem() == 0) {
+                super.onBackPressed();
+            } else {
+                summarySearchPager.setCurrentItem(summarySearchPager.getCurrentItem() - 1);
+                searchView.setIconified(true);
+                searchView.setIconified(true);
+            }
         }
     }
 
@@ -121,7 +132,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        final SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setQueryHint(getResources().getString(R.string.query_hint));
         searchView.setIconified(true);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -199,6 +210,11 @@ public class MainActivity extends AppCompatActivity
                 }
             });
             dialog.show();
+        }
+
+        if (id == R.id.action_subscribed) {
+            Intent intent = new Intent(this, SubscribedActivity.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -11,7 +11,7 @@ import android.widget.ProgressBar;
 
 import com.bmco.cratesiounofficial.OnSummaryChangeListener;
 import com.bmco.cratesiounofficial.R;
-import com.bmco.cratesiounofficial.fragments.recyclers.JustUpdatedRecyclerAdapter;
+import com.bmco.cratesiounofficial.recyclers.JustUpdatedRecyclerAdapter;
 import com.bmco.cratesiounofficial.models.Summary;
 
 import static android.view.View.GONE;

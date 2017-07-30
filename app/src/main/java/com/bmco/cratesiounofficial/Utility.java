@@ -1,21 +1,18 @@
 package com.bmco.cratesiounofficial;
 
-import com.loopj.android.http.AsyncHttpClient;
+import android.content.Context;
+import android.content.SharedPreferences;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.MySSLSocketFactory;
-import com.loopj.android.http.RequestParams;
-import com.loopj.android.http.SyncHttpClient;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.net.URLConnection;
-import java.security.KeyManagementException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
 
 /**
  * Created by Bertus on 25-5-2017.
@@ -51,5 +48,20 @@ public class Utility {
 
     private static String getAbsoluteUrl(String relativeUrl) {
         return BASE_URL + relativeUrl;
+    }
+
+    private static SharedPreferences settings;
+
+    public static void InitSaveLoad(Context context) {
+        settings = context.getSharedPreferences("data", Context.MODE_PRIVATE);
+    }
+
+    public static void saveData(String key, Object value) {
+        String data = new Gson().toJson(value);
+        settings.edit().putString(key, data).apply();
+    }
+
+    public static <T> T loadData(String key, Type type) throws JsonSyntaxException {
+        return (T) new Gson().fromJson(settings.getString(key, ""), type);
     }
 }

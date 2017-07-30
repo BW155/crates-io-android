@@ -1,8 +1,4 @@
-package com.bmco.cratesiounofficial.fragments.recyclers;
-
-/**
- * Created by bertuswisman on 26/05/2017.
- */
+package com.bmco.cratesiounofficial.recyclers;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -18,38 +14,20 @@ import com.bmco.cratesiounofficial.R;
 import com.bmco.cratesiounofficial.models.Crate;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Bertus on 25-5-2017.
  */
 
-public class SearchRecyclerAdapter extends RecyclerView.Adapter {
+public class JustUpdatedRecyclerAdapter extends RecyclerView.Adapter {
 
     private Context context;
     private List<Crate> crates;
 
-    public SearchRecyclerAdapter(Context context) {
+    public JustUpdatedRecyclerAdapter(Context context, List<Crate> crates) {
         this.context = context;
-        crates = new ArrayList<>();
-    }
-
-    public void tryAddCrate(Crate crate) {
-        for (Crate internal: crates) {
-            if (crate.getId() != null && internal.getId() != null) {
-                if (internal.getId().equals(crate.getId())) {
-                    return;
-                }
-            }
-        }
-        crates.add(crate);
-        this.notifyItemInserted(crates.indexOf(crate));
-    }
-
-    public void clearCrates() {
-        crates.clear();
-        this.notifyDataSetChanged();
+        this.crates = crates;
     }
 
     @Override
@@ -95,4 +73,3 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter {
         }
     }
 }
-

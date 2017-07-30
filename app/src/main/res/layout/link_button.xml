@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ru.dimorinny.floatingtextbutton.FloatingTextButton
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/action_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:floating_background_color="@color/colorPrimary"
+    app:floating_title="test title"
+    app:floating_title_color="@android:color/white" />

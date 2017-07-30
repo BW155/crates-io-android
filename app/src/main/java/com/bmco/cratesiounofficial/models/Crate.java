@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.bmco.cratesiounofficial.CrateNotifier;
 import com.bmco.cratesiounofficial.CratesIONetworking;
 import com.bmco.cratesiounofficial.OnDependencyDownloadListener;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
@@ -15,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.deser.impl.CreatorCollector;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -273,6 +275,18 @@ public class Crate implements Serializable {
             depThread.start();
         } else {
             listener.onDependenciesReady(this.dependencies);
+        }
+    }
+
+    public boolean compareForAlert(Crate crate, CrateNotifier.AlertType type) {
+        switch (type) {
+            case DOWNLOADS:
+                return crate.getDownloads() != this.downloads;
+            case VERSION:
+                return !crate.getMaxVersion().equals(this.maxVersion);
+            default:
+                return false;
+
         }
     }
 }

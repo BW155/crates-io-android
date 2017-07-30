@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -42,8 +43,8 @@
                                 android:layout_height="wrap_content"
                                 android:text="Max Version: "/>
 
-                            <TextView
-                                android:layout_width="match_parent"
+                            <com.bmco.cratesiounofficial.FontFitTextView
+                                android:layout_width="190dp"
                                 android:layout_height="wrap_content"
                                 android:text="v0.0.0"
                                 android:id="@+id/crate_max_version"
@@ -62,8 +63,8 @@
                                 android:layout_height="wrap_content"
                                 android:text="Downloads: "/>
 
-                            <TextView
-                                android:layout_width="match_parent"
+                            <com.bmco.cratesiounofficial.FontFitTextView
+                                android:layout_width="190dp"
                                 android:layout_height="wrap_content"
                                 android:text="1.000.000"
                                 android:textSize="20sp"
@@ -93,6 +94,20 @@
                         </LinearLayout>
 
                     </LinearLayout>
+
+                    <com.varunest.sparkbutton.SparkButton
+                        android:layout_marginTop="-10dp"
+                        android:layout_marginEnd="-10dp"
+                        android:id="@+id/alert_button"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        app:sparkbutton_activeImage="@drawable/alert_active"
+                        app:sparkbutton_inActiveImage="@drawable/alert_inactive"
+                        app:sparkbutton_iconSize="30dp"
+                        app:sparkbutton_primaryColor="@color/alert_spark_prim"
+                        app:sparkbutton_secondaryColor="@color/alert_spark_dark"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_alignParentEnd="true"/>
 
                 </RelativeLayout>
 
@@ -131,17 +146,18 @@
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="10dp"
                 android:layout_margin="10dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:padding="10dp">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="10dp"
                         android:orientation="vertical">
 
                         <TextView
@@ -149,25 +165,28 @@
                             android:layout_height="wrap_content"
                             android:text="Links:"/>
 
-                        <Button
+                        <ru.dimorinny.floatingtextbutton.FloatingTextButton
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Homepage"
-                            android:enabled="false"
+                            app:floating_background_color="#AAAAAA"
+                            app:floating_title="Homepage"
+                            app:floating_title_color="@android:color/white"
                             android:id="@+id/home_link"/>
 
-                        <Button
+                        <ru.dimorinny.floatingtextbutton.FloatingTextButton
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Documentation"
-                            android:enabled="false"
-                            android:id="@+id/doc_link"/>
+                            app:floating_background_color="#AAAAAA"
+                            app:floating_title="Documentation"
+                            app:floating_title_color="@android:color/white"
+                            android:id="@+id/doc_link" />
 
-                        <Button
+                        <ru.dimorinny.floatingtextbutton.FloatingTextButton
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Repository"
-                            android:enabled="false"
+                            app:floating_background_color="#AAAAAA"
+                            app:floating_title="Repository"
+                            app:floating_title_color="@android:color/white"
                             android:id="@+id/rep_link"/>
 
                     </LinearLayout>

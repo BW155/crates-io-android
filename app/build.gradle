@@ -7,8 +7,8 @@ android {
         applicationId "com.bmco.cratesiounofficial"
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -40,5 +40,8 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-core:2.8.0'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.0'
     compile 'com.loopj.android:android-async-http:1.4.9'
+    compile 'com.github.dimorinny:floating-text-button:0.0.2'
+    compile 'com.github.varunest:sparkbutton:1.0.5'
+    compile 'com.google.code.gson:gson:2.8.1'
     testCompile 'junit:junit:4.12'
 }

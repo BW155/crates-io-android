@@ -6,6 +6,10 @@
             android:title="About"
             android:id="@+id/action_about"
             android:icon="@android:drawable/ic_dialog_info"/>
+        <item
+            android:title="Subscribed"
+            android:id="@+id/action_subscribed"
+            android:icon="@drawable/alert_inactive"/>
     </group>
 
 

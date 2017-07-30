@@ -3,6 +3,7 @@
     package="com.bmco.cratesiounofficial">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -12,9 +13,9 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="orientation|screenSize">
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,8 +24,14 @@
         </activity>
         <activity
             android:name=".CrateActivity"
-            android:label="@string/title_activity_crate"
-            android:configChanges="orientation|screenSize" />
+            android:configChanges="orientation|screenSize"
+            android:label="@string/title_activity_crate" />
+
+        <service
+            android:name=".CrateNotifier"
+            android:exported="false" />
+
+        <activity android:name=".SubscribedActivity"></activity>
     </application>
 
 </manifest>

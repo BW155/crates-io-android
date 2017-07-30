@@ -1,4 +1,4 @@
-package com.bmco.cratesiounofficial.fragments.recyclers;
+package com.bmco.cratesiounofficial.recyclers;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

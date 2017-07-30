@@ -1,4 +1,4 @@
-package com.bmco.cratesiounofficial.fragments.recyclers;
+package com.bmco.cratesiounofficial.recyclers;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -20,12 +20,12 @@ import java.util.List;
  * Created by Bertus on 25-5-2017.
  */
 
-public class JustUpdatedRecyclerAdapter extends RecyclerView.Adapter {
+public class MostDownloadedRecyclerAdapter extends RecyclerView.Adapter {
 
     private Context context;
     private List<Crate> crates;
 
-    public JustUpdatedRecyclerAdapter(Context context, List<Crate> crates) {
+    public MostDownloadedRecyclerAdapter(Context context, List<Crate> crates) {
         this.context = context;
         this.crates = crates;
     }
