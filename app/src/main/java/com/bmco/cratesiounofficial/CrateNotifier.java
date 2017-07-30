@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.bmco.cratesiounofficial.models.Alert;
 import com.bmco.cratesiounofficial.models.Crate;
@@ -39,12 +40,8 @@ public class CrateNotifier extends IntentService {
     }
 
     @Override
-    public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
-        return Service.START_STICKY;
-    }
-
-    @Override
     protected void onHandleIntent(@Nullable Intent intent) {
+        Log.d("Crate Notifier", "handle intent");
         if (started) {
             return;
         }
@@ -54,6 +51,7 @@ public class CrateNotifier extends IntentService {
         Thread thread = new Thread() {
             public void run() {
                 while (true) {
+                    Log.i("Crate Notifier", "check");
                     try {
                         Type listType = new TypeToken<ArrayList<Alert>>(){}.getType();
                         alertList = Utility.loadData("alerts", listType);
@@ -82,7 +80,7 @@ public class CrateNotifier extends IntentService {
                         //ignore
                     }
                     try {
-                        Thread.sleep(10000);
+                        Thread.sleep(1000 * 60);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -98,8 +96,7 @@ public class CrateNotifier extends IntentService {
 
         NotificationCompat.BigTextStyle notiStyle = new
                 NotificationCompat.BigTextStyle();
-        notiStyle.setBigContentTitle(title);
-        notiStyle.setSummaryText(description);
+        notiStyle.bigText(description);
 
         Notification notification = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)

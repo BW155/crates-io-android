@@ -30,7 +30,7 @@ public class CratesIONetworking {
 
     public static Summary getSummary() throws IOException {
         final String[] result = new String[1];
-        Utility.getSSL(String.format(SUMMARY, new Date().getTime()), new AsyncHttpResponseHandler() {
+        Utility.getSSL(String.format(Locale.getDefault(), SUMMARY, new Date().getTime()), new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 if (responseBody.length > 0) {

@@ -2,6 +2,7 @@ package com.bmco.cratesiounofficial;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -62,11 +63,8 @@ public class MainActivity extends AppCompatActivity
         summarySearchPager = (NonSwipeableViewPager) findViewById(R.id.summary_search_pager);
         summarySearchPager.setAdapter(new SummarySearchPageAdapter(getSupportFragmentManager()));
 
-        TextView url = (TextView) header.findViewById(R.id.url);
-        downloads = (TextView) header.findViewById(R.id.downloads);
-        crates = (TextView) header.findViewById(R.id.crates);
-
-        url.setMovementMethod(LinkMovementMethod.getInstance());
+        downloads = header.findViewById(R.id.downloads);
+        crates = header.findViewById(R.id.crates);
 
         SummaryFragment.listener.add( new OnSummaryChangeListener() {
             @Override
@@ -210,6 +208,11 @@ public class MainActivity extends AppCompatActivity
                 }
             });
             dialog.show();
+        }
+
+        if (id == R.id.action_cargo) {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://crates.io/"));
+            startActivity(browserIntent);
         }
 
         if (id == R.id.action_subscribed) {

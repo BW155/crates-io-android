@@ -9,6 +9,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
@@ -35,22 +37,55 @@ import ru.dimorinny.floatingtextbutton.FloatingTextButton;
 
 public class CrateActivity extends AppCompatActivity {
 
+    Crate crate;
+
+    TextView downloads, maxVersion, createdAt, description;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crate);
 
+        downloads = (TextView) findViewById(R.id.crate_downloads);
+        maxVersion = (TextView) findViewById(R.id.crate_max_version);
+        createdAt = (TextView) findViewById(R.id.crate_created_at);
+        description = (TextView) findViewById(R.id.crate_description);
+
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        final Crate crate = (Crate)getIntent().getSerializableExtra("crate");
+        Intent intent = getIntent();
+        Uri data = intent.getData();
+        if (data != null) {
+            String[] path = data.toString().split("/");
+            final String id = path[4];
+            Thread thread = new Thread() {
+                public void run() {
+                    crate = CratesIONetworking.getCrateById(id);
+                    if (crate != null) {
+                        downloads.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                init();
+                            }
+                        });
+                    } else {
+                        throw new NullPointerException();
+                    }
+                }
+            };
+            thread.start();
+        } else {
+            crate = (Crate)getIntent().getSerializableExtra("crate");
+            init();
+        }
+    }
+
+    private void init() {
         setTitle(crate.getName());
 
-        TextView downloads = (TextView) findViewById(R.id.crate_downloads);
-        TextView maxVersion = (TextView) findViewById(R.id.crate_max_version);
-        TextView createdAt = (TextView) findViewById(R.id.crate_created_at);
-        TextView description = (TextView) findViewById(R.id.crate_description);
+
 
         final SparkButton alertButton = (SparkButton) findViewById(R.id.alert_button);
 
@@ -168,8 +203,8 @@ public class CrateActivity extends AppCompatActivity {
             public void onClick(View v) {
                 AlertDialog dialog = new AlertDialog.Builder(context).create();
                 View view = LayoutInflater.from(context).inflate(R.layout.alert_activate_dialog, null);
-                final CheckBox downloads = (CheckBox) view.findViewById(R.id.downloads);
-                final CheckBox version = (CheckBox) view.findViewById(R.id.version);
+                final CheckBox downloads = view.findViewById(R.id.downloads);
+                final CheckBox version = view.findViewById(R.id.version);
                 dialog.setView(view);
                 dialog.setButton(DialogInterface.BUTTON_POSITIVE, "Save", new DialogInterface.OnClickListener() {
                     @Override
@@ -210,10 +245,24 @@ public class CrateActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.crate_activity_menu, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                break;
+            case R.id.action_share:
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Check out this awesome crate:");
+                intent.putExtra(Intent.EXTRA_TEXT, "https://crates.io/crates/" + crate.getId());
+                startActivity(Intent.createChooser(intent, "Share crate with..."));
                 break;
         }
         return super.onOptionsItemSelected(item);

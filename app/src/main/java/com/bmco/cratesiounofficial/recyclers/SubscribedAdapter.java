@@ -41,7 +41,7 @@ public class SubscribedAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         final Alert alert = alerts.get(position);
         final Crate crate = alert.getCrate();
 
@@ -53,7 +53,7 @@ public class SubscribedAdapter extends RecyclerView.Adapter {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                alerts.remove(position);
+                alerts.remove(holder.getAdapterPosition());
                 notifyItemRemoved(holder.getAdapterPosition());
                 Utility.saveData("alerts", alerts);
             }

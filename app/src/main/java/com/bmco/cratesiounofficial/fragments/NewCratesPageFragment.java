@@ -27,9 +27,9 @@ public class NewCratesPageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.trending_page, container, false);
-        progressBar = (ProgressBar) view.findViewById(R.id.progress);
+        progressBar = view.findViewById(R.id.progress);
 
-        itemList = (RecyclerView) view.findViewById(R.id.recycler);
+        itemList = view.findViewById(R.id.recycler);
         itemList.setLayoutManager(new LinearLayoutManager(itemList.getContext()));
         SummaryFragment.listener.add(new OnSummaryChangeListener() {
             @Override

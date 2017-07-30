@@ -106,7 +106,6 @@
                         app:sparkbutton_iconSize="30dp"
                         app:sparkbutton_primaryColor="@color/alert_spark_prim"
                         app:sparkbutton_secondaryColor="@color/alert_spark_dark"
-                        android:layout_gravity="center_horizontal"
                         android:layout_alignParentEnd="true"/>
 
                 </RelativeLayout>

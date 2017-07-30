@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -11,6 +12,12 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <receiver android:name=".AutoStart">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize"
@@ -25,13 +32,23 @@
         <activity
             android:name=".CrateActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/title_activity_crate" />
+            android:label="@string/title_activity_crate">
+            <intent-filter android:label="Crates.io">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https"
+                    android:host="crates.io"
+                    android:pathPrefix="/crates" />
+            </intent-filter>
+
+        </activity>
 
         <service
             android:name=".CrateNotifier"
             android:exported="false" />
 
-        <activity android:name=".SubscribedActivity"></activity>
+        <activity android:name=".SubscribedActivity" />
     </application>
 
 </manifest>

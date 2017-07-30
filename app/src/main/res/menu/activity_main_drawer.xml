@@ -7,6 +7,10 @@
             android:id="@+id/action_about"
             android:icon="@android:drawable/ic_dialog_info"/>
         <item
+            android:title="Crates.io"
+            android:id="@+id/action_cargo"
+            android:icon="@drawable/cargo_logo"/>
+        <item
             android:title="Subscribed"
             android:id="@+id/action_subscribed"
             android:icon="@drawable/alert_inactive"/>

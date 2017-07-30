@@ -28,8 +28,8 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.trending_page, container, false);
-        itemList = (RecyclerView) view.findViewById(R.id.recycler);
-        progressBar = (ProgressBar) view.findViewById(R.id.progress);
+        itemList = view.findViewById(R.id.recycler);
+        progressBar = view.findViewById(R.id.progress);
         adapter = new SearchRecyclerAdapter(itemList.getContext());
         MainActivity.result = new OnResult() {
             @Override
