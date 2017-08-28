@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.bmco.cratesiounofficial.CratesIONetworking;
-import com.bmco.cratesiounofficial.OnSummaryChangeListener;
+import com.bmco.cratesiounofficial.Networking;
+import com.bmco.cratesiounofficial.interfaces.OnSummaryChangeListener;
 import com.bmco.cratesiounofficial.R;
 import com.bmco.cratesiounofficial.TrendingPageAdapter;
 import com.bmco.cratesiounofficial.models.Summary;
@@ -95,7 +95,7 @@ public class SummaryFragment extends Fragment {
             for (OnSummaryChangeListener l: listener) {
                 l.downloadStarted();
             }
-            summary = CratesIONetworking.getSummary();
+            summary = Networking.getSummary();
             swipeRefresh.post(new Runnable() {
                 @Override
                 public void run() {

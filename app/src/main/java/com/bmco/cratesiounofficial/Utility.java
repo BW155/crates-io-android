@@ -20,7 +20,7 @@ import java.net.URLConnection;
 
 public class Utility {
     private static String BASE_URL = "https://crates.io/";
-    public static String SUMMARY = "summary?_=%d"; /// + Timestamp in millis
+    public static String SUMMARY = "api/v1/summary";
     public static String SEARCH = "api/v1/crates?page=%d&per_page=100&q=%s&sort=&_=%d"; /// where 1: page number, 2: query, 3: sort type
     public static String DEPENDENCIES = "api/v1/crates/%s/%s/dependencies"; /// where 1: crate id
     public static String CRATE = "api/v1/crates/%s"; /// where 1: crate id

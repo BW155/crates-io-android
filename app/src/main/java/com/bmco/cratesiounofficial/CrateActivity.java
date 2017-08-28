@@ -17,6 +17,7 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bmco.cratesiounofficial.interfaces.OnDependencyDownloadListener;
 import com.bmco.cratesiounofficial.models.Alert;
 import com.bmco.cratesiounofficial.models.Crate;
 import com.bmco.cratesiounofficial.models.Dependency;
@@ -62,7 +63,7 @@ public class CrateActivity extends AppCompatActivity {
             final String id = path[4];
             Thread thread = new Thread() {
                 public void run() {
-                    crate = CratesIONetworking.getCrateById(id);
+                    crate = Networking.getCrateById(id);
                     if (crate != null) {
                         downloads.post(new Runnable() {
                             @Override
@@ -162,7 +163,7 @@ public class CrateActivity extends AppCompatActivity {
                             Thread crateThread = new Thread() {
                                 public void run() {
                                     Intent intent = new Intent(dependencies.getContext(), CrateActivity.class);
-                                    intent.putExtra("crate", CratesIONetworking.getCrateById(d.getCrateId()));
+                                    intent.putExtra("crate", Networking.getCrateById(d.getCrateId()));
                                     dialog.dismiss();
                                     startActivity(intent);
                                 }

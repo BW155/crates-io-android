@@ -58,7 +58,7 @@ public class CrateNotifier extends IntentService {
                         if (alertList != null) {
                             for (int i = 0; i < alertList.size(); i++) {
                                 Alert alert = alertList.get(i);
-                                Crate newCrate = CratesIONetworking.getCrateById(alert.getCrate().getId());
+                                Crate newCrate = Networking.getCrateById(alert.getCrate().getId());
                                 if (newCrate != null) {
                                     if (alert.isDownloads()) {
                                         if (newCrate.getDownloads() > alert.getCrate().getDownloads()) {

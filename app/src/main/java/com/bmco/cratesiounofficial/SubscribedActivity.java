@@ -28,13 +28,13 @@ public class SubscribedActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         Type listType = new TypeToken<ArrayList<Alert>>(){}.getType();
         List<Alert> alerts = Utility.loadData("alerts", listType);
-        recyclerView.setAdapter(new SubscribedAdapter(this, alerts));
 
         TextView emptyView = (TextView) findViewById(R.id.empty_view);
-        if (alerts.isEmpty()) {
+        if (alerts == null || alerts.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
         } else {
+            recyclerView.setAdapter(new SubscribedAdapter(this, alerts));
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
         }

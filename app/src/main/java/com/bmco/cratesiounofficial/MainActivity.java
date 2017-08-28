@@ -23,6 +23,8 @@ import android.widget.TextView;
 
 import com.bmco.cratesiounofficial.fragments.SearchFragment;
 import com.bmco.cratesiounofficial.fragments.SummaryFragment;
+import com.bmco.cratesiounofficial.interfaces.OnResult;
+import com.bmco.cratesiounofficial.interfaces.OnSummaryChangeListener;
 import com.bmco.cratesiounofficial.models.Crate;
 import com.bmco.cratesiounofficial.models.Summary;
 
@@ -141,7 +143,7 @@ public class MainActivity extends AppCompatActivity
                     public void run() {
                         result.needsClear();
                         result.downloading();
-                        List<Crate> crates = CratesIONetworking.searchCrate(query, 1);
+                        List<Crate> crates = Networking.searchCrate(query, 1);
                         for (Crate crate: crates) {
                             result.onResult(crate);
                         }
@@ -185,8 +187,6 @@ public class MainActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-
 
         return super.onOptionsItemSelected(item);
     }

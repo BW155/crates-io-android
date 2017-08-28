@@ -1,4 +1,4 @@
-package com.bmco.cratesiounofficial;
+package com.bmco.cratesiounofficial.interfaces;
 
 import com.bmco.cratesiounofficial.models.Summary;
 

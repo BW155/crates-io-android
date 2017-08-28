@@ -1,22 +1,20 @@
 
 package com.bmco.cratesiounofficial.models;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.bmco.cratesiounofficial.CrateNotifier;
-import com.bmco.cratesiounofficial.CratesIONetworking;
-import com.bmco.cratesiounofficial.OnDependencyDownloadListener;
+import com.bmco.cratesiounofficial.Networking;
+import com.bmco.cratesiounofficial.interfaces.OnDependencyDownloadListener;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.databind.deser.impl.CreatorCollector;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -265,7 +263,7 @@ public class Crate implements Serializable {
             final String finalVersion = this.getMaxVersion();
             Thread depThread = new Thread() {
                 public void run() {
-                    List<Dependency> dependencies = CratesIONetworking.getDependenciesForCrate(finalId, finalVersion);
+                    List<Dependency> dependencies = Networking.getDependenciesForCrate(finalId, finalVersion);
                     Crate.this.dependencies = dependencies;
                     if (listener != null) {
                         listener.onDependenciesReady(dependencies);
