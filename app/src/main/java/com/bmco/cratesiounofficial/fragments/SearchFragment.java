@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.bmco.cratesiounofficial.MainActivity;
-import com.bmco.cratesiounofficial.interfaces.OnResult;
+import com.bmco.cratesiounofficial.interfaces.OnCrateResult;
 import com.bmco.cratesiounofficial.R;
 import com.bmco.cratesiounofficial.recyclers.SearchRecyclerAdapter;
 import com.bmco.cratesiounofficial.models.Crate;
@@ -31,7 +31,7 @@ public class SearchFragment extends Fragment {
         itemList = view.findViewById(R.id.recycler);
         progressBar = view.findViewById(R.id.progress);
         adapter = new SearchRecyclerAdapter(itemList.getContext());
-        MainActivity.result = new OnResult() {
+        MainActivity.result = new OnCrateResult() {
             @Override
             public void onResult(final Crate crate) {
                 itemList.post(new Runnable() {

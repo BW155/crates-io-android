@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 import com.bmco.cratesiounofficial.fragments.SearchFragment;
 import com.bmco.cratesiounofficial.fragments.SummaryFragment;
-import com.bmco.cratesiounofficial.interfaces.OnResult;
+import com.bmco.cratesiounofficial.interfaces.OnCrateResult;
 import com.bmco.cratesiounofficial.interfaces.OnSummaryChangeListener;
 import com.bmco.cratesiounofficial.models.Crate;
 import com.bmco.cratesiounofficial.models.Summary;
@@ -33,7 +33,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static OnResult result;
+    public static OnCrateResult result;
 
     private SearchView searchView;
     private TextView downloads, crates;
