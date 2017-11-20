@@ -13,11 +13,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.bmco.cratesiounofficial.fragments.SearchFragment;
@@ -48,20 +48,20 @@ public class MainActivity extends AppCompatActivity
         startService(i);
 
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View header = navigationView.getHeaderView(0);
 
-        summarySearchPager = (NonSwipeableViewPager) findViewById(R.id.summary_search_pager);
+        summarySearchPager = findViewById(R.id.summary_search_pager);
         summarySearchPager.setAdapter(new SummarySearchPageAdapter(getSupportFragmentManager()));
 
         downloads = header.findViewById(R.id.downloads);
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -131,52 +131,55 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        searchView.setQueryHint(getResources().getString(R.string.query_hint));
-        searchView.setIconified(true);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(final String query) {
-                System.out.println("on search submit: " + query);
-                Thread searchThread = new Thread() {
-                    public void run() {
-                        result.needsClear();
-                        result.downloading();
-                        List<Crate> crates = Networking.searchCrate(query, 1);
-                        for (Crate crate: crates) {
-                            result.onResult(crate);
-                        }
-                        searchView.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                searchView.clearFocus();
+        MenuItem item = menu.findItem(R.id.action_search);
+        searchView = (SearchView) item.getActionView();
+        if (searchView != null) {
+            searchView.setQueryHint(getResources().getString(R.string.query_hint));
+            searchView.setIconified(true);
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(final String query) {
+                    System.out.println("on search submit: " + query);
+                    Thread searchThread = new Thread() {
+                        public void run() {
+                            result.needsClear();
+                            result.downloading();
+                            List<Crate> crates = Networking.searchCrate(query, 1);
+                            for (Crate crate : crates) {
+                                result.onResult(crate);
                             }
-                        });
-                    }
-                };
-                searchThread.start();
-                MainActivity.result.onResult(new Crate());
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                if (newText.length() > 0) {
-                    if (summarySearchPager.getCurrentItem() != 1) {
-                        summarySearchPager.setCurrentItem(1, true);
-                    }
+                            searchView.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    searchView.clearFocus();
+                                }
+                            });
+                        }
+                    };
+                    searchThread.start();
+                    MainActivity.result.onResult(new Crate());
+                    return false;
                 }
-                return false;
-            }
-        });
-        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-            @Override
-            public boolean onClose() {
-                System.out.println("on search close");
-                summarySearchPager.setCurrentItem(0, true);
-                return false;
-            }
-        });
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    if (newText.length() > 0) {
+                        if (summarySearchPager.getCurrentItem() != 1) {
+                            summarySearchPager.setCurrentItem(1, true);
+                        }
+                    }
+                    return false;
+                }
+            });
+            searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+                @Override
+                public boolean onClose() {
+                    System.out.println("on search close");
+                    summarySearchPager.setCurrentItem(0, true);
+                    return false;
+                }
+            });
+        }
         return true;
     }
 
@@ -219,7 +222,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

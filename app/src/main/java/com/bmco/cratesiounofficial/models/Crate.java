@@ -73,7 +73,8 @@ public class Crate implements Serializable {
     @JsonProperty("versions")
     private Object versions;
     @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Map<String, Object> additionalProperties = new HashMap<>();
+    private List<Version> versionList;
 
     private List<Dependency> dependencies;
 
@@ -286,5 +287,13 @@ public class Crate implements Serializable {
                 return false;
 
         }
+    }
+
+    public List<Version> getVersionList() {
+        return versionList;
+    }
+
+    public void setVersionList(List<Version> versionList) {
+        this.versionList = versionList;
     }
 }

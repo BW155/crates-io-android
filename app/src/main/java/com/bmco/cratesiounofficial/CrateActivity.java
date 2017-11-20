@@ -22,6 +22,7 @@ import com.bmco.cratesiounofficial.models.Alert;
 import com.bmco.cratesiounofficial.models.Crate;
 import com.bmco.cratesiounofficial.models.Dependency;
 import com.google.gson.reflect.TypeToken;
+import com.mukesh.MarkdownView;
 import com.varunest.sparkbutton.SparkButton;
 
 import java.lang.reflect.Type;
@@ -41,16 +42,18 @@ public class CrateActivity extends AppCompatActivity {
     Crate crate;
 
     TextView downloads, maxVersion, createdAt, description;
+    MarkdownView readme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crate);
 
-        downloads = (TextView) findViewById(R.id.crate_downloads);
-        maxVersion = (TextView) findViewById(R.id.crate_max_version);
-        createdAt = (TextView) findViewById(R.id.crate_created_at);
-        description = (TextView) findViewById(R.id.crate_description);
+        downloads = findViewById(R.id.crate_downloads);
+        maxVersion = findViewById(R.id.crate_max_version);
+        createdAt = findViewById(R.id.crate_created_at);
+        description = findViewById(R.id.crate_description);
+        readme = findViewById(R.id.readme);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeButtonEnabled(true);
@@ -61,38 +64,41 @@ public class CrateActivity extends AppCompatActivity {
         if (data != null) {
             String[] path = data.toString().split("/");
             final String id = path[4];
-            Thread thread = new Thread() {
-                public void run() {
-                    crate = Networking.getCrateById(id);
-                    if (crate != null) {
-                        downloads.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                init();
-                            }
-                        });
-                    } else {
-                        throw new NullPointerException();
-                    }
-                }
-            };
-            thread.start();
+            downloadCrateInfo(id);
         } else {
             crate = (Crate)getIntent().getSerializableExtra("crate");
             init();
+            downloadCrateInfo(crate.getId());
         }
+    }
+
+    private void downloadCrateInfo(final String id) {
+        Thread thread = new Thread() {
+            public void run() {
+                crate = Networking.getCrateById(id);
+                if (crate != null) {
+                    downloads.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            init();
+                        }
+                    });
+                } else {
+                    throw new NullPointerException();
+                }
+            }
+        };
+        thread.start();
     }
 
     private void init() {
         setTitle(crate.getName());
 
+        final SparkButton alertButton = findViewById(R.id.alert_button);
 
-
-        final SparkButton alertButton = (SparkButton) findViewById(R.id.alert_button);
-
-        FloatingTextButton homepage = (FloatingTextButton) findViewById(R.id.home_link);
-        FloatingTextButton repo = (FloatingTextButton) findViewById(R.id.rep_link);
-        FloatingTextButton docs = (FloatingTextButton) findViewById(R.id.doc_link);
+        FloatingTextButton homepage = findViewById(R.id.home_link);
+        FloatingTextButton repo = findViewById(R.id.rep_link);
+        FloatingTextButton docs = findViewById(R.id.doc_link);
 
         if (crate.getHomepage() != null) {
             homepage.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
@@ -135,16 +141,25 @@ public class CrateActivity extends AppCompatActivity {
         maxVersion.setText(crate.getMaxVersion());
 
         SimpleDateFormat format = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss'Z'", Locale.getDefault());
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss", Locale.getDefault());
         try {
-            Date date = formatter.parse(crate.getCreatedAt());
+            Date date = formatter.parse(crate.getCreatedAt().substring(0, 18));
             createdAt.setText(format.format(date));
         } catch (ParseException e) {
             e.printStackTrace();
         }
         description.setText(crate.getDescription());
 
-        final LinearLayout dependencies = (LinearLayout) findViewById(R.id.dependency_group);
+        MarkdownView markdownView = findViewById(R.id.readme);
+
+        if (crate.getVersionList() != null) {
+            String markdown = crate.getVersionList().get(0).getReadme();
+            markdownView.setMarkDownText(markdown);
+        } else {
+            markdownView.setMarkDownText("Loading...");
+        }
+
+        final LinearLayout dependencies = findViewById(R.id.dependency_group);
 
         crate.getDependencies(new OnDependencyDownloadListener() {
             @Override

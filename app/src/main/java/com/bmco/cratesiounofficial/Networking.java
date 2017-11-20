@@ -3,6 +3,7 @@ package com.bmco.cratesiounofficial;
 import com.bmco.cratesiounofficial.models.Crate;
 import com.bmco.cratesiounofficial.models.Dependency;
 import com.bmco.cratesiounofficial.models.Summary;
+import com.bmco.cratesiounofficial.models.Version;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,8 +16,10 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Scanner;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -27,6 +30,9 @@ import static com.bmco.cratesiounofficial.Utility.SUMMARY;
  */
 
 public class Networking {
+
+    private static HashMap<String, String> cachedReadmes = new HashMap<>();
+    private static HashMap<String, List<Dependency>> cachedDependencies = new HashMap<>();
 
     public static Summary getSummary() throws IOException {
         final String[] result = new String[1];
@@ -108,6 +114,9 @@ public class Networking {
 
     public static List<Dependency> getDependenciesForCrate(String id, String version) {
         String url = String.format(Locale.US, Utility.DEPENDENCIES, id, version);
+        if (cachedDependencies.get(id + version) != null) {
+            return cachedDependencies.get(id + version);
+        }
 
         final String[] result = new String[1];
         Utility.getSSL(url, new AsyncHttpResponseHandler() {
@@ -146,6 +155,7 @@ public class Networking {
                 Dependency dependency = mapper.readValue(jsonDependency, Dependency.class);
                 dependencyList.add(dependency);
             }
+            cachedDependencies.put(id + version, dependencyList);
             return dependencyList;
         } catch (JSONException | IOException e) {
             e.printStackTrace();
@@ -183,14 +193,59 @@ public class Networking {
 
         try {
             JSONObject jResult = new JSONObject(result[0]);
-            JSONObject crate = jResult.getJSONObject("crate");
+            JSONObject jsCrate = jResult.getJSONObject("crate");
+            JSONArray jsVersions = jResult.getJSONArray("versions");
 
             ObjectMapper mapper = new ObjectMapper();
 
-            return mapper.readValue(crate.toString(), Crate.class);
+            Crate crate = mapper.readValue(jsCrate.toString(), Crate.class);
+            List<Version> versions = new ArrayList<>();
+            for (int i = 0; i < jsVersions.length(); i++) {
+                Version version = mapper.readValue(jsVersions.getJSONObject(i).toString(), Version.class);
+                versions.add(version);
+            }
+            String readme = Networking.getReadme(id, versions.get(0).getNum());
+            versions.get(0).setReadme(readme);
+            crate.setVersionList(versions);
+            return crate;
         } catch (JSONException | IOException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private static String getReadme(String id, String version) {
+        if (cachedReadmes.get(id + version) != null) {
+            return cachedReadmes.get(id + version);
+        }
+        String url = String.format(Locale.US, Utility.README, id, version);
+
+        final String[] result = new String[1];
+        Utility.getSSL(url, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                if (responseBody.length > 0) {
+                    result[0] = new String(responseBody);
+                } else {
+                    result[0] = "ERROR";
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                if (responseBody.length > 0) {
+                    result[0] = new String(responseBody);
+                } else {
+                    result[0] = "ERROR";
+                }
+            }
+        });
+
+        while (result[0] == null) {
+            //ignore
+        }
+
+        cachedReadmes.put(id + version, result[0]);
+        return result[0];
     }
 }
