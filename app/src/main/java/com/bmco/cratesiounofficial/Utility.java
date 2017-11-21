@@ -7,6 +7,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,30 +29,34 @@ public class Utility {
     public static String DEPENDENCIES = "api/v1/crates/%s/%s/dependencies"; /// where 1: crate id
     public static String CRATE = "api/v1/crates/%s"; /// where 1: crate id
     public static String README = "api/v1/crates/%s/%s/readme"; /// where 1: crate id, 2: version
+    public static String ME = "api/v1/me";
+    public static String CRATES_BY_USERID = "api/v1/crates?user_id=%d"; /// where 1: user id;
 
     public static void getSSL(String url, AsyncHttpResponseHandler responseHandler) {
         try {
-            URL page = new URL(getAbsoluteUrl(url)); // Process the URL far enough to find the right handler
+            URL page = new URL(url); // Process the URL far enough to find the right handler
             HttpURLConnection urlConnection = (HttpURLConnection) page.openConnection();
+            String token = Utility.loadData("token", String.class);
+            if (token != null) {
+                urlConnection.setRequestProperty("Authorization", token);
+            }
             urlConnection.setUseCaches(false); // Don't look at possibly cached data
             // Read it all and print it out
             InputStream stream = urlConnection.getInputStream();
-            InputStreamReader reader = new InputStreamReader(stream);
-            BufferedReader br = new BufferedReader(reader);
-            StringBuilder buffer = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) {
-                buffer.append(line).append("\n");
+            byte[] bytes = IOUtils.toByteArray(stream);
+            int code = urlConnection.getResponseCode();
+            if (code >= 200 && code < 400) {
+                responseHandler.sendSuccessMessage(code, null, bytes);
+            } else {
+                responseHandler.sendFailureMessage(code, null, bytes, new IOException());
             }
-            br.close();
-            responseHandler.sendSuccessMessage(200, null, buffer.toString().getBytes());
         } catch (IOException e) {
             e.printStackTrace();
             responseHandler.sendFailureMessage(0, null, new byte[1], e);
         }
     }
 
-    private static String getAbsoluteUrl(String relativeUrl) {
+    public static String getAbsoluteUrl(String relativeUrl) {
         return BASE_URL + relativeUrl;
     }
 

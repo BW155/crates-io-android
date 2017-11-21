@@ -44,5 +44,7 @@ dependencies {
     compile 'com.github.varunest:sparkbutton:1.0.5'
     compile 'com.google.code.gson:gson:2.8.1'
     compile 'com.github.mukeshsolanki:MarkdownView-Android:1.0.4'
+    compile 'de.hdodenhof:circleimageview:2.2.0'
+    compile group: 'commons-io', name: 'commons-io', version: '2.5'
     testCompile 'junit:junit:4.12'
 }

@@ -35,13 +35,15 @@
             android:label="@string/title_activity_crate">
             <intent-filter android:label="Crates.io">
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https"
-                    android:host="crates.io"
-                    android:pathPrefix="/crates" />
-            </intent-filter>
 
+                <data
+                    android:host="crates.io"
+                    android:pathPrefix="/crates"
+                    android:scheme="https" />
+            </intent-filter>
         </activity>
 
         <service
@@ -49,6 +51,8 @@
             android:exported="false" />
 
         <activity android:name=".SubscribedActivity" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".DashboardActivity"></activity>
     </application>
 
 </manifest>

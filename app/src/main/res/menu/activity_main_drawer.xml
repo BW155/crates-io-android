@@ -3,6 +3,16 @@
 
     <group>
         <item
+            android:title="Login"
+            android:id="@+id/action_login"/>
+        <item
+            android:title="Dashboard"
+            android:id="@+id/action_dashboard"
+            android:visible="false"/>
+    </group>
+
+    <group>
+        <item
             android:title="About"
             android:id="@+id/action_about"
             android:icon="@android:drawable/ic_dialog_info"/>
@@ -15,7 +25,5 @@
             android:id="@+id/action_subscribed"
             android:icon="@drawable/alert_inactive"/>
     </group>
-
-
 
 </menu>

@@ -3,10 +3,12 @@ package com.bmco.cratesiounofficial;
 import com.bmco.cratesiounofficial.models.Crate;
 import com.bmco.cratesiounofficial.models.Dependency;
 import com.bmco.cratesiounofficial.models.Summary;
+import com.bmco.cratesiounofficial.models.User;
 import com.bmco.cratesiounofficial.models.Version;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.ArrayType;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -19,10 +21,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Scanner;
 
 import cz.msebera.android.httpclient.Header;
 
+import static com.bmco.cratesiounofficial.Utility.ME;
 import static com.bmco.cratesiounofficial.Utility.SUMMARY;
 
 /**
@@ -34,9 +36,46 @@ public class Networking {
     private static HashMap<String, String> cachedReadmes = new HashMap<>();
     private static HashMap<String, List<Dependency>> cachedDependencies = new HashMap<>();
 
+    public static User getMe(String token) throws IOException {
+        final String[] result = new String[1];
+        Utility.getSSL(Utility.getAbsoluteUrl(ME), new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                if (responseBody.length > 0) {
+                    result[0] = new String(responseBody);
+                } else {
+                    result[0] = "ERROR";
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                if (responseBody.length > 0) {
+                    result[0] = new String(responseBody);
+                } else {
+                    result[0] = "ERROR";
+                }
+            }
+        });
+
+        while (result[0] == null) {
+            //ignore
+        }
+
+        try {
+            JSONObject jResult = new JSONObject(result[0]);
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.readValue(jResult.getJSONObject("user").toString(), User.class);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public static Summary getSummary() throws IOException {
         final String[] result = new String[1];
-        Utility.getSSL(SUMMARY, new AsyncHttpResponseHandler() {
+        Utility.getSSL(Utility.getAbsoluteUrl(SUMMARY), new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 if (responseBody.length > 0) {
@@ -68,7 +107,7 @@ public class Networking {
         String url = String.format(Locale.US, Utility.SEARCH, page, query, new Date().getTime());
 
         final String[] result = new String[1];
-        Utility.getSSL(url, new AsyncHttpResponseHandler() {
+        Utility.getSSL(Utility.getAbsoluteUrl(url), new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 if (responseBody.length > 0) {
@@ -119,7 +158,7 @@ public class Networking {
         }
 
         final String[] result = new String[1];
-        Utility.getSSL(url, new AsyncHttpResponseHandler() {
+        Utility.getSSL(Utility.getAbsoluteUrl(url), new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 if (responseBody.length > 0) {
@@ -167,7 +206,7 @@ public class Networking {
         String url = String.format(Locale.US, Utility.CRATE, id);
 
         final String[] result = new String[1];
-        Utility.getSSL(url, new AsyncHttpResponseHandler() {
+        Utility.getSSL(Utility.getAbsoluteUrl(url), new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 if (responseBody.length > 0) {
@@ -221,7 +260,7 @@ public class Networking {
         String url = String.format(Locale.US, Utility.README, id, version);
 
         final String[] result = new String[1];
-        Utility.getSSL(url, new AsyncHttpResponseHandler() {
+        Utility.getSSL(Utility.getAbsoluteUrl(url), new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 if (responseBody.length > 0) {
@@ -247,5 +286,51 @@ public class Networking {
 
         cachedReadmes.put(id + version, result[0]);
         return result[0];
+    }
+
+    public static List<Crate> getCratesByUserId(int userId) {
+        String url = String.format(Locale.US, Utility.CRATES_BY_USERID, userId);
+
+        final String[] result = new String[1];
+        Utility.getSSL(Utility.getAbsoluteUrl(url), new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                if (responseBody.length > 0) {
+                    result[0] = new String(responseBody);
+                } else {
+                    result[0] = "ERROR";
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                if (responseBody.length > 0) {
+                    result[0] = new String(responseBody);
+                } else {
+                    result[0] = "ERROR";
+                }
+            }
+        });
+
+        while (result[0] == null) {
+            //ignore
+        }
+
+        try {
+            JSONObject jResult = new JSONObject(result[0]);
+            JSONArray jsCrates = jResult.getJSONArray("crates");
+
+            ObjectMapper mapper = new ObjectMapper();
+
+            List<Crate> crates = new ArrayList<>();
+
+            for (int i = 0; i < jsCrates.length(); i++) {
+                crates.add(mapper.readValue(jsCrates.getJSONObject(i).toString(), Crate.class));
+            }
+
+            return crates;
+        } catch (JSONException | IOException e) {
+            return null;
+        }
     }
 }

@@ -2,6 +2,8 @@ package com.bmco.cratesiounofficial;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -18,6 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bmco.cratesiounofficial.fragments.SearchFragment;
@@ -26,9 +29,15 @@ import com.bmco.cratesiounofficial.interfaces.OnCrateResult;
 import com.bmco.cratesiounofficial.interfaces.OnSummaryChangeListener;
 import com.bmco.cratesiounofficial.models.Crate;
 import com.bmco.cratesiounofficial.models.Summary;
+import com.bmco.cratesiounofficial.models.User;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -36,8 +45,13 @@ public class MainActivity extends AppCompatActivity
     public static OnCrateResult result;
 
     private SearchView searchView;
-    private TextView downloads, crates;
+    private TextView downloads, crates, profileUsername;
     private NonSwipeableViewPager summarySearchPager;
+    private LinearLayout profileSection;
+    private CircleImageView profileImage;
+    private Menu menu;
+
+    public static final String token = "ZQRN3oC1CIabzbHf5eCM45UVHbB0Ae1p";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +80,10 @@ public class MainActivity extends AppCompatActivity
 
         downloads = header.findViewById(R.id.downloads);
         crates = header.findViewById(R.id.crates);
+        profileSection = header.findViewById(R.id.profile_section);
+        profileImage = header.findViewById(R.id.profile_image);
+        profileUsername = header.findViewById(R.id.profile_username);
+        profileSection.setVisibility(View.INVISIBLE);
 
         SummaryFragment.listener.add( new OnSummaryChangeListener() {
             @Override
@@ -85,6 +103,52 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+        menu = navigationView.getMenu();
+        loadNavProfile();
+    }
+
+    private void loadNavProfile() {
+        final MenuItem login = menu.findItem(R.id.action_login);
+        final MenuItem profile = menu.findItem(R.id.action_dashboard);
+        if (Utility.loadData("token", String.class) != null) {
+            Thread thread = new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        final User user = Networking.getMe((String) Utility.loadData("token", String.class));
+                        profileSection.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                profileSection.setVisibility(View.VISIBLE);
+                                profileUsername.setText(user.getLogin());
+                                login.setVisible(false);
+                                profile.setVisible(true);
+                            }
+                        });
+                        Utility.getSSL(user.getAvatar(), new AsyncHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                                final Bitmap bitmap = BitmapFactory.decodeByteArray(responseBody, 0, responseBody.length);
+                                profileImage.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        profileImage.setImageBitmap(bitmap);
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+                            }
+                        });
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            thread.start();
+        }
     }
 
     private class SummarySearchPageAdapter extends FragmentPagerAdapter {
@@ -199,6 +263,16 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        if (id == R.id.action_login) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivityForResult(intent, 200);
+        }
+
+        if (id == R.id.action_dashboard) {
+            Intent intent = new Intent(this, DashboardActivity.class);
+            startActivity(intent);
+        }
+
         if (id == R.id.action_about) {
             AlertDialog dialog = new AlertDialog.Builder(this).create();
             dialog.setTitle("About");
@@ -225,5 +299,12 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 200) {
+            this.loadNavProfile();
+        }
     }
 }

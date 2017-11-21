@@ -83,8 +83,6 @@ public class CrateActivity extends AppCompatActivity {
                             init();
                         }
                     });
-                } else {
-                    throw new NullPointerException();
                 }
             }
         };
