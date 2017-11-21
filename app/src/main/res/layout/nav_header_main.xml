@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/nav_header_height"
+    android:layout_height="190dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/side_nav_bar"
     android:gravity="center_vertical"
@@ -18,17 +18,17 @@
         android:orientation="horizontal">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:id="@+id/profile_image"
-            app:civ_border_width="2dp"
+            app:civ_border_width="1dp"
             app:civ_border_overlay="true"
             app:civ_border_color="#aaa"
             android:elevation="5dp"/>
 
-        <TextView
+        <com.bmco.cratesiounofficial.FontFitTextView
             android:layout_gravity="center_vertical"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="test name"
             android:textSize="18sp"
@@ -37,6 +37,14 @@
             android:layout_marginStart="15dp"/>
 
     </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Crates.io Total"
+        android:textColor="#fff"
+        android:textSize="15sp"
+        android:layout_marginTop="15dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -49,13 +57,14 @@
             android:text="1.000.000"
             android:id="@+id/crates"
             android:textColor="#fff"
-            android:textSize="23sp" />
+            android:textSize="20sp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="crates"/>
+            android:text="crates"
+            android:layout_gravity="center_vertical"/>
 
     </LinearLayout>
 
@@ -71,13 +80,14 @@
             android:text="1.000.000"
             android:id="@+id/downloads"
             android:textColor="#fff"
-            android:textSize="23sp" />
+            android:textSize="20sp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="downloads"/>
+            android:text="downloads"
+            android:layout_gravity="center_vertical"/>
 
     </LinearLayout>
 

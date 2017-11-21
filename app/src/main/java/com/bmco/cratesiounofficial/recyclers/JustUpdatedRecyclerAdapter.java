@@ -41,10 +41,10 @@ public class JustUpdatedRecyclerAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         final Crate crate = crates.get(position);
 
-        TextView crateName = (TextView) holder.itemView.findViewById(R.id.crate_title);
-        TextView crateDescription = (TextView) holder.itemView.findViewById(R.id.crate_description);
-        TextView crateDownloads = (TextView) holder.itemView.findViewById(R.id.crate_downloads);
-        TextView crateMaxVersion = (TextView) holder.itemView.findViewById(R.id.crate_max_version);
+        TextView crateName = holder.itemView.findViewById(R.id.crate_title);
+        TextView crateDescription = holder.itemView.findViewById(R.id.crate_description);
+        TextView crateDownloads = holder.itemView.findViewById(R.id.crate_downloads);
+        TextView crateMaxVersion = holder.itemView.findViewById(R.id.crate_max_version);
 
         crateName.setText(crate.getName());
         crateDescription.setText(crate.getDescription());
@@ -52,13 +52,10 @@ public class JustUpdatedRecyclerAdapter extends RecyclerView.Adapter {
         crateDownloads.setText(df.format(Long.valueOf(crate.getDownloads())));
         crateMaxVersion.setText("v" + crate.getMaxVersion());
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, CrateActivity.class);
-                intent.putExtra("crate", crate);
-                context.startActivity(intent);
-            }
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, CrateActivity.class);
+            intent.putExtra("crate", crate);
+            context.startActivity(intent);
         });
     }
 

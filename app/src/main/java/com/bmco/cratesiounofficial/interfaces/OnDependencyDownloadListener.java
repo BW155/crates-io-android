@@ -9,5 +9,5 @@ import java.util.List;
  */
 
 public interface OnDependencyDownloadListener {
-    public void onDependenciesReady(List<Dependency> dependency);
+    void onDependenciesReady(List<Dependency> dependency);
 }

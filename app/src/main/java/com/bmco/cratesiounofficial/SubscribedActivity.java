@@ -24,12 +24,12 @@ public class SubscribedActivity extends AppCompatActivity {
         setContentView(R.layout.activity_subscribed);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.subscribed_recycler);
+        RecyclerView recyclerView = findViewById(R.id.subscribed_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         Type listType = new TypeToken<ArrayList<Alert>>(){}.getType();
         List<Alert> alerts = Utility.loadData("alerts", listType);
 
-        TextView emptyView = (TextView) findViewById(R.id.empty_view);
+        TextView emptyView = findViewById(R.id.empty_view);
         if (alerts == null || alerts.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);

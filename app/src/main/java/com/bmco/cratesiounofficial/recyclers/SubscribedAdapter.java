@@ -45,27 +45,21 @@ public class SubscribedAdapter extends RecyclerView.Adapter {
         final Alert alert = alerts.get(position);
         final Crate crate = alert.getCrate();
 
-        FloatingTextButton fab = (FloatingTextButton) holder.itemView.findViewById(R.id.delete_button);
-        TextView title = (TextView) holder.itemView.findViewById(R.id.crate_title);
+        FloatingTextButton fab = holder.itemView.findViewById(R.id.delete_button);
+        TextView title = holder.itemView.findViewById(R.id.crate_title);
 
         title.setText(crate.getName());
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alerts.remove(holder.getAdapterPosition());
-                notifyItemRemoved(holder.getAdapterPosition());
-                Utility.saveData("alerts", alerts);
-            }
+        fab.setOnClickListener(v -> {
+            alerts.remove(holder.getAdapterPosition());
+            notifyItemRemoved(holder.getAdapterPosition());
+            Utility.saveData("alerts", alerts);
         });
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, CrateActivity.class);
-                intent.putExtra("crate", crate);
-                context.startActivity(intent);
-            }
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, CrateActivity.class);
+            intent.putExtra("crate", crate);
+            context.startActivity(intent);
         });
     }
 

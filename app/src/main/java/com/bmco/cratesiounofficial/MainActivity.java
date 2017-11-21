@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -51,8 +52,6 @@ public class MainActivity extends AppCompatActivity
     private CircleImageView profileImage;
     private Menu menu;
 
-    public static final String token = "ZQRN3oC1CIabzbHf5eCM45UVHbB0Ae1p";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,13 +87,10 @@ public class MainActivity extends AppCompatActivity
         SummaryFragment.listener.add( new OnSummaryChangeListener() {
             @Override
             public void summary(final Summary summary) {
-                crates.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        DecimalFormat df = new DecimalFormat("#,##0");
-                        crates.setText(df.format(Long.valueOf(summary.getNumCrates())));
-                        downloads.setText(df.format(Long.valueOf(summary.getNumDownloads())));
-                    }
+                crates.post(() -> {
+                    DecimalFormat df = new DecimalFormat("#,##0");
+                    crates.setText(df.format(Long.valueOf(summary.getNumCrates())));
+                    downloads.setText(df.format(Long.valueOf(summary.getNumDownloads())));
                 });
             }
 
@@ -115,26 +111,18 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void run() {
                     try {
-                        final User user = Networking.getMe((String) Utility.loadData("token", String.class));
-                        profileSection.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                profileSection.setVisibility(View.VISIBLE);
-                                profileUsername.setText(user.getLogin());
-                                login.setVisible(false);
-                                profile.setVisible(true);
-                            }
+                        final User user = Networking.getMe(Utility.loadData("token", String.class));
+                        profileSection.post(() -> {
+                            profileSection.setVisibility(View.VISIBLE);
+                            profileUsername.setText(user.getLogin());
+                            login.setVisible(false);
+                            profile.setVisible(true);
                         });
                         Utility.getSSL(user.getAvatar(), new AsyncHttpResponseHandler() {
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                                 final Bitmap bitmap = BitmapFactory.decodeByteArray(responseBody, 0, responseBody.length);
-                                profileImage.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        profileImage.setImageBitmap(bitmap);
-                                    }
-                                });
+                                profileImage.post(() -> profileImage.setImageBitmap(bitmap));
                             }
 
                             @Override
@@ -148,6 +136,10 @@ public class MainActivity extends AppCompatActivity
                 }
             };
             thread.start();
+        } else {
+            profileSection.setVisibility(View.INVISIBLE);
+            login.setVisible(true);
+            profile.setVisible(false);
         }
     }
 
@@ -212,12 +204,7 @@ public class MainActivity extends AppCompatActivity
                             for (Crate crate : crates) {
                                 result.onResult(crate);
                             }
-                            searchView.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    searchView.clearFocus();
-                                }
-                            });
+                            searchView.post(() -> searchView.clearFocus());
                         }
                     };
                     searchThread.start();
@@ -235,13 +222,10 @@ public class MainActivity extends AppCompatActivity
                     return false;
                 }
             });
-            searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-                @Override
-                public boolean onClose() {
-                    System.out.println("on search close");
-                    summarySearchPager.setCurrentItem(0, true);
-                    return false;
-                }
+            searchView.setOnCloseListener(() -> {
+                System.out.println("on search close");
+                summarySearchPager.setCurrentItem(0, true);
+                return false;
             });
         }
         return true;
@@ -259,7 +243,7 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -277,12 +261,7 @@ public class MainActivity extends AppCompatActivity
             AlertDialog dialog = new AlertDialog.Builder(this).create();
             dialog.setTitle("About");
             dialog.setMessage(getResources().getString(R.string.about));
-            dialog.setButton(DialogInterface.BUTTON_POSITIVE, "OKE", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
+            dialog.setButton(DialogInterface.BUTTON_POSITIVE, "OKE", (dialog1, which) -> dialog1.dismiss());
             dialog.show();
         }
 
