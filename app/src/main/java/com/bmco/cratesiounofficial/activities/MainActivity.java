@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bmco.cratesiounofficial.CrateNotifier;
 import com.bmco.cratesiounofficial.Networking;
@@ -90,6 +91,7 @@ public class MainActivity extends AppCompatActivity
         profileSection = header.findViewById(R.id.profile_section);
         profileImage = header.findViewById(R.id.profile_image);
         profileUsername = header.findViewById(R.id.profile_username);
+
         profileSection.setVisibility(View.INVISIBLE);
 
         SummaryFragment.listener.add( new OnSummaryChangeListener() {
@@ -114,6 +116,7 @@ public class MainActivity extends AppCompatActivity
     private void loadNavProfile() {
         final MenuItem login = menu.findItem(R.id.action_login);
         final MenuItem profile = menu.findItem(R.id.action_dashboard);
+        final MenuItem logout = menu.findItem(R.id.logout_action);
         if (Utility.loadData("token", String.class) != null) {
             Thread thread = new Thread() {
                 @Override
@@ -122,10 +125,14 @@ public class MainActivity extends AppCompatActivity
                         final User user = Networking.getMe(Utility.loadData("token", String.class));
                         currentUser = user;
                         profileSection.post(() -> {
+                            if (profileSection.getVisibility() == View.INVISIBLE) {
+                                Toast.makeText(MainActivity.this, "Logged in as: " + user.getLogin(), Toast.LENGTH_LONG).show();
+                            }
                             profileSection.setVisibility(View.VISIBLE);
                             profileUsername.setText(user.getLogin());
                             login.setVisible(false);
                             profile.setVisible(true);
+                            logout.setVisible(true);
                         });
                         Utility.getSSL(user.getAvatar(), new AsyncHttpResponseHandler() {
                             @Override
@@ -148,6 +155,7 @@ public class MainActivity extends AppCompatActivity
             thread.start();
         } else {
             profileSection.setVisibility(View.INVISIBLE);
+            logout.setVisible(false);
             login.setVisible(true);
             profile.setVisible(false);
         }
@@ -260,6 +268,12 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_login) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivityForResult(intent, 200);
+        }
+
+        if (id == R.id.logout_action) {
+            Utility.saveData("token", null);
+            this.loadNavProfile();
+            Toast.makeText(this, "Logged out", Toast.LENGTH_LONG).show();
         }
 
         if (id == R.id.action_dashboard) {

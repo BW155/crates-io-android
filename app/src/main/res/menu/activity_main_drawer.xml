@@ -4,11 +4,13 @@
     <group>
         <item
             android:title="Login"
-            android:id="@+id/action_login"/>
+            android:id="@+id/action_login"
+            android:icon="@drawable/ic_login"/>
         <item
             android:title="Dashboard"
             android:id="@+id/action_dashboard"
-            android:visible="false"/>
+            android:visible="false"
+            android:icon="@drawable/ic_dashboard"/>
     </group>
 
     <group>
@@ -25,5 +27,14 @@
             android:id="@+id/action_subscribed"
             android:icon="@drawable/alert_inactive"/>
     </group>
+
+    <item
+        android:title="" />
+
+    <item
+        android:id="@+id/logout_action"
+        android:title="Logout"
+        android:visible="false"
+        android:icon="@drawable/ic_logout"/>
 
 </menu>
