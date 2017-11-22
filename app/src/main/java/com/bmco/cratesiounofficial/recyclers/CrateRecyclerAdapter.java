@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bmco.cratesiounofficial.CrateActivity;
+import com.bmco.cratesiounofficial.activities.CrateActivity;
 import com.bmco.cratesiounofficial.R;
 import com.bmco.cratesiounofficial.models.Crate;
 
@@ -17,15 +17,15 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 /**
- * Created by Bertus on 25-5-2017.
+ * Created by bertuswisman on 20/11/2017.
  */
 
-public class MostDownloadedRecyclerAdapter extends RecyclerView.Adapter {
+public class CrateRecyclerAdapter extends RecyclerView.Adapter {
 
     private Context context;
     private List<Crate> crates;
 
-    public MostDownloadedRecyclerAdapter(Context context, List<Crate> crates) {
+    public CrateRecyclerAdapter(Context context, List<Crate> crates) {
         this.context = context;
         this.crates = crates;
     }
@@ -70,3 +70,4 @@ public class MostDownloadedRecyclerAdapter extends RecyclerView.Adapter {
         }
     }
 }
+

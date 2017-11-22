@@ -9,10 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.bmco.cratesiounofficial.interfaces.OnSummaryChangeListener;
 import com.bmco.cratesiounofficial.R;
-import com.bmco.cratesiounofficial.recyclers.NewCratesRecyclerAdapter;
+import com.bmco.cratesiounofficial.interfaces.OnSummaryChangeListener;
 import com.bmco.cratesiounofficial.models.Summary;
+import com.bmco.cratesiounofficial.recyclers.CrateRecyclerAdapter;
 
 /**
  * Created by Bertus on 25-5-2017.
@@ -54,7 +54,7 @@ public class NewCratesPageFragment extends Fragment {
         itemList.post(new Runnable() {
             @Override
             public void run() {
-                NewCratesRecyclerAdapter adapter = new NewCratesRecyclerAdapter(itemList.getContext(), summary.getNewCrates());
+                CrateRecyclerAdapter adapter = new CrateRecyclerAdapter(itemList.getContext(), summary.getNewCrates());
                 itemList.setAdapter(adapter);
                 progressBar.setVisibility(View.GONE);
             }

@@ -1,4 +1,4 @@
-package com.bmco.cratesiounofficial;
+package com.bmco.cratesiounofficial.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,6 +24,11 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bmco.cratesiounofficial.CrateNotifier;
+import com.bmco.cratesiounofficial.Networking;
+import com.bmco.cratesiounofficial.NonSwipeableViewPager;
+import com.bmco.cratesiounofficial.R;
+import com.bmco.cratesiounofficial.Utility;
 import com.bmco.cratesiounofficial.fragments.SearchFragment;
 import com.bmco.cratesiounofficial.fragments.SummaryFragment;
 import com.bmco.cratesiounofficial.interfaces.OnCrateResult;

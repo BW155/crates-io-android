@@ -1,4 +1,4 @@
-package com.bmco.cratesiounofficial;
+package com.bmco.cratesiounofficial.activities;
 
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.bmco.cratesiounofficial.Networking;
+import com.bmco.cratesiounofficial.R;
+import com.bmco.cratesiounofficial.Utility;
 import com.bmco.cratesiounofficial.models.User;
 
 import java.io.IOException;

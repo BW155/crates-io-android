@@ -1,4 +1,4 @@
-package com.bmco.cratesiounofficial;
+package com.bmco.cratesiounofficial.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.bmco.cratesiounofficial.R;
+import com.bmco.cratesiounofficial.Utility;
 import com.bmco.cratesiounofficial.models.Alert;
 import com.bmco.cratesiounofficial.recyclers.SubscribedAdapter;
 import com.google.gson.reflect.TypeToken;

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.bmco.cratesiounofficial.LoginActivity"
+    tools:context="com.bmco.cratesiounofficial.activities.LoginActivity"
     android:orientation="vertical">
 
     <TextView

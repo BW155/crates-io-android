@@ -1,4 +1,4 @@
-package com.bmco.cratesiounofficial;
+package com.bmco.cratesiounofficial.activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,6 +17,9 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bmco.cratesiounofficial.Networking;
+import com.bmco.cratesiounofficial.R;
+import com.bmco.cratesiounofficial.Utility;
 import com.bmco.cratesiounofficial.interfaces.OnDependencyDownloadListener;
 import com.bmco.cratesiounofficial.models.Alert;
 import com.bmco.cratesiounofficial.models.Crate;

@@ -9,10 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.bmco.cratesiounofficial.interfaces.OnSummaryChangeListener;
 import com.bmco.cratesiounofficial.R;
-import com.bmco.cratesiounofficial.recyclers.JustUpdatedRecyclerAdapter;
+import com.bmco.cratesiounofficial.interfaces.OnSummaryChangeListener;
 import com.bmco.cratesiounofficial.models.Summary;
+import com.bmco.cratesiounofficial.recyclers.CrateRecyclerAdapter;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -56,7 +56,7 @@ public class JustUpdatedPageFragment extends Fragment {
         itemList.post(new Runnable() {
             @Override
             public void run() {
-                JustUpdatedRecyclerAdapter adapter = new JustUpdatedRecyclerAdapter(itemList.getContext(), summary.getJustUpdated());
+                CrateRecyclerAdapter adapter = new CrateRecyclerAdapter(itemList.getContext(), summary.getJustUpdated());
                 itemList.setAdapter(adapter);
                 progressBar.setVisibility(GONE);
             }

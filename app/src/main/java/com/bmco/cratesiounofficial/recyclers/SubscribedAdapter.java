@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bmco.cratesiounofficial.CrateActivity;
+import com.bmco.cratesiounofficial.activities.CrateActivity;
 import com.bmco.cratesiounofficial.R;
 import com.bmco.cratesiounofficial.Utility;
 import com.bmco.cratesiounofficial.models.Alert;

@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.bmco.cratesiounofficial.MainActivity;
+import com.bmco.cratesiounofficial.activities.MainActivity;
 import com.bmco.cratesiounofficial.interfaces.OnCrateResult;
 import com.bmco.cratesiounofficial.R;
 import com.bmco.cratesiounofficial.recyclers.SearchRecyclerAdapter;

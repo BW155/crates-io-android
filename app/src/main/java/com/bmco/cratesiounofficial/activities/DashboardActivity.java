@@ -1,4 +1,4 @@
-package com.bmco.cratesiounofficial;
+package com.bmco.cratesiounofficial.activities;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,9 +10,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.bmco.cratesiounofficial.FontFitTextView;
+import com.bmco.cratesiounofficial.Networking;
+import com.bmco.cratesiounofficial.R;
+import com.bmco.cratesiounofficial.Utility;
 import com.bmco.cratesiounofficial.models.Crate;
 import com.bmco.cratesiounofficial.models.User;
-import com.bmco.cratesiounofficial.recyclers.DashboardRecyclerAdapter;
+import com.bmco.cratesiounofficial.recyclers.CrateRecyclerAdapter;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import java.io.IOException;
@@ -58,7 +62,7 @@ public class DashboardActivity extends AppCompatActivity {
                                 final List<Crate> crates = Networking.getCratesByUserId(user.getId());
                                 myCrates.post(() -> {
                                     myCrates.setLayoutManager(new LinearLayoutManager(DashboardActivity.this));
-                                    myCrates.setAdapter(new DashboardRecyclerAdapter(DashboardActivity.this, crates));
+                                    myCrates.setAdapter(new CrateRecyclerAdapter(DashboardActivity.this, crates));
                                     crateCount.setText(NumberFormat.getNumberInstance().format(crates.size()));
                                     int downloads = 0;
                                     for (Crate c: crates) {
