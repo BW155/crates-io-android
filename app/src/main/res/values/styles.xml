@@ -20,5 +20,4 @@
     <style name="CratesSearchTheme" parent="Widget.AppCompat.SearchView">
         <item name="queryHint">@string/query_hint</item>
     </style>
-
 </resources>

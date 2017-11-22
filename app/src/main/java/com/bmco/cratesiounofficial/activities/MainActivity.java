@@ -57,6 +57,9 @@ public class MainActivity extends AppCompatActivity
     private CircleImageView profileImage;
     private Menu menu;
 
+    public static Bitmap avatar;
+    public static User currentUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,6 +120,7 @@ public class MainActivity extends AppCompatActivity
                 public void run() {
                     try {
                         final User user = Networking.getMe(Utility.loadData("token", String.class));
+                        currentUser = user;
                         profileSection.post(() -> {
                             profileSection.setVisibility(View.VISIBLE);
                             profileUsername.setText(user.getLogin());
@@ -127,6 +131,7 @@ public class MainActivity extends AppCompatActivity
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                                 final Bitmap bitmap = BitmapFactory.decodeByteArray(responseBody, 0, responseBody.length);
+                                avatar = bitmap;
                                 profileImage.post(() -> profileImage.setImageBitmap(bitmap));
                             }
 

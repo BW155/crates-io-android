@@ -57,7 +57,6 @@
                 <com.bmco.cratesiounofficial.FontFitTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="9.000.000"
                     android:id="@+id/crate_count"
                     android:textColor="#000"/>
 
@@ -76,7 +75,6 @@
                 <com.bmco.cratesiounofficial.FontFitTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="9.000.000"
                     android:id="@+id/crate_downloads"
                     android:textColor="#000"/>
 

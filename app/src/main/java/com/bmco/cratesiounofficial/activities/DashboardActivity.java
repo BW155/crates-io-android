@@ -50,30 +50,29 @@ public class DashboardActivity extends AppCompatActivity {
         myCrates = findViewById(R.id.my_crates);
 
         if (Utility.loadData("token", String.class) != null) {
+            profileUsername.setText(MainActivity.currentUser.getLogin());
             Thread thread = new Thread() {
                 @Override
                 public void run() {
-                    try {
-                        final User user = Networking.getMe(Utility.loadData("token", String.class));
-                        profileImage.post(() -> profileUsername.setText(user.getLogin()));
-                        Thread thread = new Thread() {
-                            @Override
-                            public void run() {
-                                final List<Crate> crates = Networking.getCratesByUserId(user.getId());
-                                myCrates.post(() -> {
-                                    myCrates.setLayoutManager(new LinearLayoutManager(DashboardActivity.this));
-                                    myCrates.setAdapter(new CrateRecyclerAdapter(DashboardActivity.this, crates));
-                                    crateCount.setText(NumberFormat.getNumberInstance().format(crates.size()));
-                                    int downloads = 0;
-                                    for (Crate c: crates) {
-                                        downloads += c.getDownloads();
-                                    }
-                                    crateDownloads.setText(NumberFormat.getNumberInstance().format(downloads));
-                                });
-                            }
-                        };
-                        thread.start();
-                        Utility.getSSL(user.getAvatar(), new AsyncHttpResponseHandler() {
+                    Thread thread = new Thread() {
+                        @Override
+                        public void run() {
+                            final List<Crate> crates = Networking.getCratesByUserId(MainActivity.currentUser.getId());
+                            myCrates.post(() -> {
+                                myCrates.setLayoutManager(new LinearLayoutManager(DashboardActivity.this));
+                                myCrates.setAdapter(new CrateRecyclerAdapter(DashboardActivity.this, crates));
+                                crateCount.setText(NumberFormat.getNumberInstance().format(crates.size()));
+                                int downloads = 0;
+                                for (Crate c: crates) {
+                                    downloads += c.getDownloads();
+                                }
+                                crateDownloads.setText(NumberFormat.getNumberInstance().format(downloads));
+                            });
+                        }
+                    };
+                    thread.start();
+                    if (MainActivity.avatar == null) {
+                        Utility.getSSL(MainActivity.currentUser.getAvatar(), new AsyncHttpResponseHandler() {
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                                 final Bitmap bitmap = BitmapFactory.decodeByteArray(responseBody, 0, responseBody.length);
@@ -85,8 +84,8 @@ public class DashboardActivity extends AppCompatActivity {
 
                             }
                         });
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    } else {
+                        profileImage.post(() -> profileImage.setImageBitmap(MainActivity.avatar));
                     }
                 }
             };

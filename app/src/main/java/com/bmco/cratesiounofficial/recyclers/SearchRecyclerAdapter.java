@@ -19,6 +19,9 @@ import com.bmco.cratesiounofficial.models.Crate;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -50,6 +53,18 @@ public class SearchRecyclerAdapter extends RecyclerView.Adapter {
     public void clearCrates() {
         crates.clear();
         this.notifyDataSetChanged();
+    }
+
+    public void sort(String by) {
+        switch (by) {
+            case "Downloads High > Low":
+                Collections.sort(crates, (crate, crate1) -> Integer.compare(crate1.getDownloads(), crate.getDownloads()));
+                break;
+            case "Downloads Low > High":
+                Collections.sort(crates, (crate, crate1) -> Integer.compare(crate.getDownloads(), crate1.getDownloads()));
+                break;
+        }
+        this.notifyItemRangeChanged(0, crates.size());
     }
 
     @Override
