@@ -39,25 +39,17 @@ public class MostDownloadedPageFragment extends Fragment {
 
             @Override
             public void downloadStarted() {
-                progressBar.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBar.setVisibility(View.VISIBLE);
-                    }
-                });
+                progressBar.post(() -> progressBar.setVisibility(View.VISIBLE));
             }
         });
         return view;
     }
 
     private void refreshSummary(final Summary summary) {
-        itemList.post(new Runnable() {
-            @Override
-            public void run() {
-                CrateRecyclerAdapter adapter = new CrateRecyclerAdapter(itemList.getContext(), summary.getMostDownloaded());
-                itemList.setAdapter(adapter);
-                progressBar.setVisibility(View.GONE);
-            }
+        itemList.post(() -> {
+            CrateRecyclerAdapter adapter = new CrateRecyclerAdapter(itemList.getContext(), summary.getMostDownloaded());
+            itemList.setAdapter(adapter);
+            progressBar.setVisibility(View.GONE);
         });
     }
 }

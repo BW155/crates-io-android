@@ -80,12 +80,7 @@ public class CrateActivity extends AppCompatActivity {
             public void run() {
                 crate = Networking.getCrateById(id);
                 if (crate != null) {
-                    downloads.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            init();
-                        }
-                    });
+                    downloads.post(() -> init());
                 }
             }
         };
@@ -103,37 +98,28 @@ public class CrateActivity extends AppCompatActivity {
 
         if (crate.getHomepage() != null) {
             homepage.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-            homepage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse(String.valueOf(crate.getHomepage())));
-                    startActivity(intent);
-                }
+            homepage.setOnClickListener(v -> {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(String.valueOf(crate.getHomepage())));
+                startActivity(intent);
             });
         }
 
         if (crate.getDocumentation() != null) {
             docs.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-            docs.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse(String.valueOf(crate.getDocumentation())));
-                    startActivity(intent);
-                }
+            docs.setOnClickListener(v -> {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(String.valueOf(crate.getDocumentation())));
+                startActivity(intent);
             });
         }
 
         if (crate.getRepository() != null) {
             repo.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-            repo.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse(String.valueOf(crate.getRepository())));
-                    startActivity(intent);
-                }
+            repo.setOnClickListener(v -> {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(String.valueOf(crate.getRepository())));
+                startActivity(intent);
             });
         }
 
@@ -162,38 +148,27 @@ public class CrateActivity extends AppCompatActivity {
 
         final LinearLayout dependencies = findViewById(R.id.dependency_group);
 
-        crate.getDependencies(new OnDependencyDownloadListener() {
-            @Override
-            public void onDependenciesReady(List<Dependency> dependencyList) {
-                for (final Dependency d: dependencyList) {
-                    final FloatingTextButton button = (FloatingTextButton)  LayoutInflater.from(dependencies.getContext()).inflate(R.layout.link_button, null);
-                    button.setTitle(d.getCrateId());
-                    button.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            final AlertDialog dialog = new AlertDialog.Builder(dependencies.getContext()).create();
-                            dialog.setTitle("Loading");
-                            dialog.setCancelable(false);
-                            dialog.setView(LayoutInflater.from(dependencies.getContext()).inflate(R.layout.load_alert, null));
-                            dialog.show();
-                            Thread crateThread = new Thread() {
-                                public void run() {
-                                    Intent intent = new Intent(dependencies.getContext(), CrateActivity.class);
-                                    intent.putExtra("crate", Networking.getCrateById(d.getCrateId()));
-                                    dialog.dismiss();
-                                    startActivity(intent);
-                                }
-                            };
-                            crateThread.start();
-                        }
-                    });
-                    dependencies.post(new Runnable() {
-                        @Override
+        crate.getDependencies(dependencyList -> {
+            for (final Dependency d: dependencyList) {
+                final FloatingTextButton button = (FloatingTextButton)  LayoutInflater.from(dependencies.getContext()).inflate(R.layout.link_button, null);
+                button.setTitle(d.getCrateId());
+                button.setOnClickListener(v -> {
+                    final AlertDialog dialog = new AlertDialog.Builder(dependencies.getContext()).create();
+                    dialog.setTitle("Loading");
+                    dialog.setCancelable(false);
+                    dialog.setView(LayoutInflater.from(dependencies.getContext()).inflate(R.layout.load_alert, null));
+                    dialog.show();
+                    Thread crateThread = new Thread() {
                         public void run() {
-                            dependencies.addView(button);
+                            Intent intent = new Intent(dependencies.getContext(), CrateActivity.class);
+                            intent.putExtra("crate", Networking.getCrateById(d.getCrateId()));
+                            dialog.dismiss();
+                            startActivity(intent);
                         }
-                    });
-                }
+                    };
+                    crateThread.start();
+                });
+                dependencies.post(() -> dependencies.addView(button));
             }
         });
 
@@ -215,49 +190,43 @@ public class CrateActivity extends AppCompatActivity {
             }
         }
 
-        alertButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog dialog = new AlertDialog.Builder(context).create();
-                View view = LayoutInflater.from(context).inflate(R.layout.alert_activate_dialog, null);
-                final CheckBox downloads = view.findViewById(R.id.downloads);
-                final CheckBox version = view.findViewById(R.id.version);
-                dialog.setView(view);
-                dialog.setButton(DialogInterface.BUTTON_POSITIVE, "Save", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        for (Alert alert: finalAlerts) {
-                            if (alert.getCrate().getName().equals(crate.getName())) {
-                                alert.setDownloads(downloads.isChecked());
-                                alert.setVersion(version.isChecked());
-                                Utility.saveData("alerts", finalAlerts);
-                                if (alert.isDownloads() || alert.isVersion()) {
-                                    alertButton.setChecked(true);
-                                    alertButton.playAnimation();
-                                } else {
-                                    alertButton.setChecked(false);
-                                }
-                                return;
-                            }
-                        }
-                        Alert alert = new Alert(version.isChecked(), downloads.isChecked(), crate);
-                        finalAlerts.add(alert);
+        alertButton.setOnClickListener(v -> {
+            AlertDialog dialog = new AlertDialog.Builder(context).create();
+            View view = LayoutInflater.from(context).inflate(R.layout.alert_activate_dialog, null);
+            final CheckBox downloads = view.findViewById(R.id.downloads);
+            final CheckBox version = view.findViewById(R.id.version);
+            dialog.setView(view);
+            dialog.setButton(DialogInterface.BUTTON_POSITIVE, "Save", (dialog1, which) -> {
+                for (Alert alert: finalAlerts) {
+                    if (alert.getCrate().getName().equals(crate.getName())) {
+                        alert.setDownloads(downloads.isChecked());
+                        alert.setVersion(version.isChecked());
                         Utility.saveData("alerts", finalAlerts);
                         if (alert.isDownloads() || alert.isVersion()) {
                             alertButton.setChecked(true);
                             alertButton.playAnimation();
+                        } else {
+                            alertButton.setChecked(false);
                         }
-                    }
-                });
-                for (Alert alert: finalAlerts) {
-                    if (alert.getCrate().getName().equals(crate.getName())) {
-                        downloads.setChecked(alert.isDownloads());
-                        version.setChecked(alert.isVersion());
-                        break;
+                        return;
                     }
                 }
-                dialog.show();
+                Alert alert = new Alert(version.isChecked(), downloads.isChecked(), crate);
+                finalAlerts.add(alert);
+                Utility.saveData("alerts", finalAlerts);
+                if (alert.isDownloads() || alert.isVersion()) {
+                    alertButton.setChecked(true);
+                    alertButton.playAnimation();
+                }
+            });
+            for (Alert alert: finalAlerts) {
+                if (alert.getCrate().getName().equals(crate.getName())) {
+                    downloads.setChecked(alert.isDownloads());
+                    version.setChecked(alert.isVersion());
+                    break;
+                }
             }
+            dialog.show();
         });
     }
 

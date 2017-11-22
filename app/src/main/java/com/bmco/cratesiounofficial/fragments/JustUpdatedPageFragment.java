@@ -41,25 +41,17 @@ public class JustUpdatedPageFragment extends Fragment {
 
             @Override
             public void downloadStarted() {
-                progressBar.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBar.setVisibility(VISIBLE);
-                    }
-                });
+                progressBar.post(() -> progressBar.setVisibility(VISIBLE));
             }
         });
         return view;
     }
 
     private void refreshSummary(final Summary summary) {
-        itemList.post(new Runnable() {
-            @Override
-            public void run() {
-                CrateRecyclerAdapter adapter = new CrateRecyclerAdapter(itemList.getContext(), summary.getJustUpdated());
-                itemList.setAdapter(adapter);
-                progressBar.setVisibility(GONE);
-            }
+        itemList.post(() -> {
+            CrateRecyclerAdapter adapter = new CrateRecyclerAdapter(itemList.getContext(), summary.getJustUpdated());
+            itemList.setAdapter(adapter);
+            progressBar.setVisibility(GONE);
         });
     }
 }

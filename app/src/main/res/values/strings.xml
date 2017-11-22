@@ -4,15 +4,14 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
     <string name="query_hint">Search Crates</string>
     <string name="search">search crates</string>
     <string name="title_activity_crate">CrateActivity</string>
-    <string name="https_crates_io"><a href="https://crates.io/">Crates.io</a></string>
     <string name="about">I created this app for a smoother experience on mobile, I\'m not the owner of Crates.io, all credits go to <a href="https://crates.io/">Crates.io</a></string>
     <string-array name="sortables">
         <item>Downloads High > Low</item>
         <item>Downloads Low > High</item>
     </string-array>
     <string name="sortby">Sort by</string>
+    <string name="downloads_image">Downloads Image</string>
 </resources>

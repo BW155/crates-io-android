@@ -15,7 +15,6 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/left_part"
                 android:layout_gravity="start">
 
                 <TextView
@@ -66,7 +65,8 @@
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:src="@drawable/ic_file_download_pink_24dp"
-                            android:id="@+id/download_image"/>
+                            android:id="@+id/download_image"
+                            android:contentDescription="@string/downloads_image"/>
 
                         <com.bmco.cratesiounofficial.FontFitTextView
                             android:layout_width="75dp"

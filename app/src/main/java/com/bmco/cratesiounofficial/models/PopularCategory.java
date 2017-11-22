@@ -34,7 +34,7 @@ public class PopularCategory {
     @JsonProperty("slug")
     private String slug;
     @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Map<String, Object> additionalProperties = new HashMap<>();
 
     @JsonProperty("category")
     public String getCategory() {

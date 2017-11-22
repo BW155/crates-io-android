@@ -25,21 +25,21 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class Summary {
 
     @JsonProperty("just_updated")
-    private List<Crate> justUpdated = new ArrayList<Crate>();
+    private List<Crate> justUpdated = new ArrayList<>();
     @JsonProperty("most_downloaded")
-    private List<Crate> mostDownloaded = new ArrayList<Crate>();
+    private List<Crate> mostDownloaded = new ArrayList<>();
     @JsonProperty("new_crates")
-    private List<Crate> newCrates = new ArrayList<Crate>();
+    private List<Crate> newCrates = new ArrayList<>();
     @JsonProperty("num_crates")
     private int numCrates;
     @JsonProperty("num_downloads")
     private int numDownloads;
     @JsonProperty("popular_categories")
-    private List<PopularCategory> popularCategories = new ArrayList<PopularCategory>();
+    private List<PopularCategory> popularCategories = new ArrayList<>();
     @JsonProperty("popular_keywords")
-    private List<PopularKeyword> popularKeywords = new ArrayList<PopularKeyword>();
+    private List<PopularKeyword> popularKeywords = new ArrayList<>();
     @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Map<String, Object> additionalProperties = new HashMap<>();
 
     @JsonProperty("just_updated")
     public List<Crate> getJustUpdated() {

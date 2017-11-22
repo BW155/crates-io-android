@@ -35,7 +35,7 @@ public class Dependency implements Serializable {
     @JsonProperty("downloads")
     private int downloads;
     @JsonProperty("features")
-    private List<Object> features = new ArrayList<Object>();
+    private List<Object> features = new ArrayList<>();
     @JsonProperty("id")
     private int id;
     @JsonProperty("kind")
@@ -49,7 +49,7 @@ public class Dependency implements Serializable {
     @JsonProperty("version_id")
     private int versionId;
     @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Map<String, Object> additionalProperties = new HashMap<>();
 
     @JsonProperty("crate_id")
     public String getCrateId() {

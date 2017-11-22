@@ -29,7 +29,7 @@ public class Links implements Serializable{
     @JsonProperty("versions")
     private String versions;
     @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Map<String, Object> additionalProperties = new HashMap<>();
 
     @JsonProperty("owners")
     public String getOwners() {

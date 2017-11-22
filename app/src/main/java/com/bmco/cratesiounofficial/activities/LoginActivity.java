@@ -31,30 +31,22 @@ public class LoginActivity extends AppCompatActivity {
         apiToken = findViewById(R.id.api_token);
         confirmButton = findViewById(R.id.confirm_button);
 
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Thread thread = new Thread() {
-                    @Override
-                    public void run() {
-                        try {
-                            Utility.saveData("token", apiToken.getText().toString().trim());
-                            User user = Networking.getMe(apiToken.getText().toString().trim());
-                            if (user != null) {
-                               apiToken.post(new Runnable() {
-                                   @Override
-                                   public void run() {
-                                       finish();
-                                   }
-                               });
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
+        confirmButton.setOnClickListener(view -> {
+            Thread thread = new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        Utility.saveData("token", apiToken.getText().toString().trim());
+                        User user = Networking.getMe(apiToken.getText().toString().trim());
+                        if (user != null) {
+                           apiToken.post(() -> finish());
                         }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                };
-                thread.start();
-            }
+                }
+            };
+            thread.start();
         });
     }
 

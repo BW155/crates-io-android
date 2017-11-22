@@ -53,16 +53,13 @@ public class SummaryFragment extends Fragment {
 
 
         swipeRefresh = view.findViewById(R.id.refresher);
-        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                Thread summaryThread = new Thread() {
-                    public void run() {
-                        summaryThread();
-                    }
-                };
-                summaryThread.start();
-            }
+        swipeRefresh.setOnRefreshListener(() -> {
+            Thread summaryThread1 = new Thread() {
+                public void run() {
+                    summaryThread();
+                }
+            };
+            summaryThread1.start();
         });
 
         mTrendingPager.addOnPageChangeListener( new ViewPager.OnPageChangeListener() {
@@ -96,23 +93,13 @@ public class SummaryFragment extends Fragment {
                 l.downloadStarted();
             }
             summary = Networking.getSummary();
-            swipeRefresh.post(new Runnable() {
-                @Override
-                public void run() {
-                    swipeRefresh.setRefreshing(false);
-                }
-            });
+            swipeRefresh.post(() -> swipeRefresh.setRefreshing(false));
             for (OnSummaryChangeListener l: listener) {
                 l.summary(summary);
             }
         } catch (IOException e) {
             e.printStackTrace();
-            mTrendingPager.post(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(mTrendingPager.getContext(), "Can't load summary", Toast.LENGTH_LONG).show();
-                }
-            });
+            mTrendingPager.post(() -> Toast.makeText(mTrendingPager.getContext(), "Can't load summary", Toast.LENGTH_LONG).show());
         }
     }
 }
