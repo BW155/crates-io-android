@@ -12,7 +12,7 @@
         android:layout_margin="15dp"
         android:text="Enter your API token here, you can obtain one by logging in at crates.io and click 'New Token' in the 'Account Settings' section"/>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="15dp">
@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:hint="API token" />
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:layout_width="300dp"
