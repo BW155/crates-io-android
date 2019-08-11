@@ -63,7 +63,7 @@ class Version: Serializable {
     @JsonProperty("crate_size")
     @get:JsonProperty("crate_size")
     @set:JsonProperty("crate_size")
-    var crate_size: Int? = null
+    var crateSize: Int? = null
     @JsonProperty("published_by")
-    var published_by: User? = null
+    var publishedBy: User? = null
 }

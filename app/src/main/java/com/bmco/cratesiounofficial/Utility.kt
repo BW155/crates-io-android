@@ -2,35 +2,28 @@ package com.bmco.cratesiounofficial
 
 import android.content.Context
 import android.content.SharedPreferences
-
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.loopj.android.http.AsyncHttpResponseHandler
-
 import org.apache.commons.io.IOUtils
-
-import java.io.BufferedReader
 import java.io.IOException
-import java.io.InputStream
-import java.io.InputStreamReader
 import java.lang.reflect.Type
 import java.net.HttpURLConnection
 import java.net.URL
-import java.net.URLConnection
 
 /**
  * Created by Bertus on 25-5-2017.
  */
 
 object Utility {
-    private val BASE_URL = "https://www.crates.io/"
+    private const val BASE_URL = "https://www.crates.io/"
     var SUMMARY = "api/v1/summary"
     var SEARCH = "api/v1/crates?page=%d&per_page=100&q=%s&sort=&_=%d" /// where 1: page number, 2: query, 3: sort type
     var DEPENDENCIES = "api/v1/crates/%s/%s/dependencies" /// where 1: crate id
     var CRATE = "api/v1/crates/%s" /// where 1: crate id
     var README = "api/v1/crates/%s/%s/readme" /// where 1: crate id, 2: version
     var ME = "api/v1/me"
-    var CRATES_BY_USERID = "api/v1/crates?user_id=%d" /// where 1: user id;
+    var CRATES_BY_USER_ID = "api/v1/crates?user_id=%d" /// where 1: user id;
 
     private var settings: SharedPreferences? = null
 
@@ -38,7 +31,7 @@ object Utility {
         try {
             val page = URL(url) // Process the URL far enough to find the right handler
             val urlConnection = page.openConnection() as HttpURLConnection
-            val token = Utility.loadData<String>("token", String::class.java)
+            val token = loadData<String>("token", String::class.java)
             if (token != null) {
                 urlConnection.setRequestProperty("Authorization", token)
             }
@@ -63,7 +56,7 @@ object Utility {
         return BASE_URL + relativeUrl
     }
 
-    fun InitSaveLoad(context: Context) {
+    fun initSaveLoad(context: Context) {
         settings = context.getSharedPreferences("data", Context.MODE_PRIVATE)
     }
 

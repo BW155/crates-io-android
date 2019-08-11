@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.util.TypedValue
-import android.view.View
 
 /**
  * Created by Bertus on 25-5-2017.

@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Utility.InitSaveLoad(this)
+        Utility.initSaveLoad(this)
 
         val i = Intent(this, CrateNotifier::class.java)
         startService(i)
@@ -160,10 +160,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
         override fun getItem(position: Int): Fragment? {
-            when (position) {
-                0 -> return SummaryFragment()
-                1 -> return SearchFragment()
-                else -> return null
+            return when (position) {
+                0 -> SummaryFragment()
+                1 -> SearchFragment()
+                else -> null
             }
         }
     }
@@ -209,12 +209,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         }
                     }
                     searchThread.start()
-                    MainActivity.result!!.onResult(Crate())
+                    result!!.onResult(Crate())
                     return false
                 }
 
                 override fun onQueryTextChange(newText: String): Boolean {
-                    if (newText.length > 0) {
+                    if (newText.isNotEmpty()) {
                         if (summarySearchPager!!.currentItem != 1) {
                             summarySearchPager!!.setCurrentItem(1, true)
                         }

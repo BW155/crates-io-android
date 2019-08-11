@@ -1,17 +1,13 @@
 package com.bmco.cratesiounofficial.activities
 
-import androidx.appcompat.app.ActionBar
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
-
+import androidx.appcompat.app.AppCompatActivity
 import com.bmco.cratesiounofficial.Networking
 import com.bmco.cratesiounofficial.R
 import com.bmco.cratesiounofficial.Utility
-import com.bmco.cratesiounofficial.models.User
-
 import java.io.IOException
 
 class LoginActivity : AppCompatActivity() {

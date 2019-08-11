@@ -1,21 +1,18 @@
 package com.bmco.cratesiounofficial.activities
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
-
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bmco.cratesiounofficial.R
 import com.bmco.cratesiounofficial.Utility
 import com.bmco.cratesiounofficial.models.Alert
 import com.bmco.cratesiounofficial.recyclers.SubscribedAdapter
 import com.google.gson.reflect.TypeToken
-
-import java.lang.reflect.Type
-import java.util.ArrayList
+import java.util.*
 
 class SubscribedActivity : AppCompatActivity() {
 
@@ -29,7 +26,7 @@ class SubscribedActivity : AppCompatActivity() {
         val listType = object : TypeToken<ArrayList<Alert>>() {
 
         }.type
-        val alerts = Utility.loadData<List<Alert>>("alerts", listType)
+        val alerts = Utility.loadData<MutableList<Alert>>("alerts", listType)
 
         val emptyView = findViewById<TextView>(R.id.empty_view)
         if (alerts == null || alerts.isEmpty()) {

@@ -1,27 +1,21 @@
 package com.bmco.cratesiounofficial.activities
 
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import androidx.appcompat.app.ActionBar
+import android.view.MenuItem
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.view.MenuItem
-import android.widget.TextView
-
 import com.bmco.cratesiounofficial.FontFitTextView
 import com.bmco.cratesiounofficial.Networking
 import com.bmco.cratesiounofficial.R
 import com.bmco.cratesiounofficial.Utility
-import com.bmco.cratesiounofficial.models.Crate
 import com.bmco.cratesiounofficial.recyclers.CrateRecyclerAdapter
 import com.loopj.android.http.AsyncHttpResponseHandler
-
-import java.text.NumberFormat
-
 import cz.msebera.android.httpclient.Header
 import de.hdodenhof.circleimageview.CircleImageView
+import java.text.NumberFormat
 
 class DashboardActivity : AppCompatActivity() {
 
@@ -55,8 +49,8 @@ class DashboardActivity : AppCompatActivity() {
                             val crates = Networking.getCratesByUserId(MainActivity.currentUser.id!!)
                             myCrates!!.post {
                                 myCrates!!.layoutManager = LinearLayoutManager(this@DashboardActivity)
-                                myCrates!!.adapter = CrateRecyclerAdapter(this@DashboardActivity, crates)
-                                crateCount!!.text = NumberFormat.getNumberInstance().format(crates!!.size.toLong())
+                                myCrates!!.adapter = CrateRecyclerAdapter(this@DashboardActivity, crates!!)
+                                crateCount!!.text = NumberFormat.getNumberInstance().format(crates.size.toLong())
                                 var downloads = 0
                                 for (c in crates) {
                                     downloads += c.downloads
@@ -66,20 +60,7 @@ class DashboardActivity : AppCompatActivity() {
                         }
                     }
                     thread.start()
-                    if (MainActivity.avatar == null) {
-                        Utility.getSSL(MainActivity.currentUser.avatar!!, object : AsyncHttpResponseHandler() {
-                            override fun onSuccess(statusCode: Int, headers: Array<Header>, responseBody: ByteArray) {
-                                val bitmap = BitmapFactory.decodeByteArray(responseBody, 0, responseBody.size)
-                                profileImage!!.post { profileImage!!.setImageBitmap(bitmap) }
-                            }
-
-                            override fun onFailure(statusCode: Int, headers: Array<Header>, responseBody: ByteArray, error: Throwable) {
-
-                            }
-                        })
-                    } else {
-                        profileImage!!.post { profileImage!!.setImageBitmap(MainActivity.avatar) }
-                    }
+                    profileImage!!.post { profileImage!!.setImageBitmap(MainActivity.avatar) }
                 }
             }
             thread.start()

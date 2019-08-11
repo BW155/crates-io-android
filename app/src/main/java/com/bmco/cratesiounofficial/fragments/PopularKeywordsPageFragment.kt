@@ -29,7 +29,7 @@ class PopularKeywordsPageFragment : Fragment() {
     }
 
     companion object {
-        val ARG_PAGE = "ARG_PAGE"
+        const val ARG_PAGE = "ARG_PAGE"
 
         fun newInstance(page: Int): PopularKeywordsPageFragment {
             val args = Bundle()

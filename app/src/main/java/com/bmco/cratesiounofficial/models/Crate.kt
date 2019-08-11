@@ -88,7 +88,7 @@ class Crate : Serializable {
     @JsonProperty("recent_downloads")
     @get:JsonProperty("recent_downloads")
     @set:JsonProperty("recent_downloads")
-    var recent_downloads: Int? = null
+    var recentDownloads: Int? = null
 
     @JsonIgnore
     private val additionalProperties = HashMap<String, Any>()
@@ -122,10 +122,10 @@ class Crate : Serializable {
     }
 
     fun compareForAlert(crate: Crate, type: CrateNotifier.AlertType): Boolean {
-        when (type) {
-            CrateNotifier.AlertType.DOWNLOADS -> return crate.downloads != this.downloads
-            CrateNotifier.AlertType.VERSION -> return crate.maxVersion != this.maxVersion
-            else -> return false
+        return when (type) {
+            CrateNotifier.AlertType.DOWNLOADS -> crate.downloads != this.downloads
+            CrateNotifier.AlertType.VERSION -> crate.maxVersion != this.maxVersion
+            else -> false
         }
     }
 }

@@ -1,7 +1,5 @@
 package com.bmco.cratesiounofficial
 
-import android.content.Context
-
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -17,7 +15,7 @@ import com.bmco.cratesiounofficial.fragments.PopularKeywordsPageFragment
  * Created by Bertus on 25-5-2017.
  */
 
-class TrendingPageAdapter(fm: FragmentManager, private val context: Context) : FragmentPagerAdapter(fm) {
+class TrendingPageAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
     private val pageCount = 3
     private val tabTitles = arrayOf("New Crates", "Most Downloaded", "Just Updated", "Popular Keywords", "Popular Categories")
 

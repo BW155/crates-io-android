@@ -35,7 +35,7 @@ class SummaryFragment : Fragment() {
         val view = inflater.inflate(R.layout.summary, container, false)
 
         mTrendingPager = view.findViewById(R.id.trending_pager)
-        mTrendingPager!!.adapter = TrendingPageAdapter(fragmentManager!!, view.context)
+        mTrendingPager!!.adapter = TrendingPageAdapter(fragmentManager!!)
 
         // Give the TabLayout the ViewPager
         val tabLayout = view.findViewById<TabLayout>(R.id.sliding_tabs)

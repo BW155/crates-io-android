@@ -1,22 +1,17 @@
 package com.bmco.cratesiounofficial.activities
 
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.appcompat.app.ActionBar
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.View
 import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.TextView
-
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import com.bmco.cratesiounofficial.Networking
 import com.bmco.cratesiounofficial.R
 import com.bmco.cratesiounofficial.Utility
@@ -27,17 +22,11 @@ import com.bmco.cratesiounofficial.models.Dependency
 import com.google.gson.reflect.TypeToken
 import com.mukesh.MarkdownView
 import com.varunest.sparkbutton.SparkButton
-
-import java.lang.reflect.Type
-import java.text.DateFormat
+import ru.dimorinny.floatingtextbutton.FloatingTextButton
 import java.text.DecimalFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.ArrayList
-import java.util.Date
-import java.util.Locale
-
-import ru.dimorinny.floatingtextbutton.FloatingTextButton
+import java.util.*
 
 class CrateActivity : AppCompatActivity() {
 

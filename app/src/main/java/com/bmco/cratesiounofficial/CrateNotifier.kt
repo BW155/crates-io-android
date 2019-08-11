@@ -1,7 +1,6 @@
 package com.bmco.cratesiounofficial
 
 import android.app.IntentService
-import android.app.Notification
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
@@ -14,7 +13,6 @@ import com.bmco.cratesiounofficial.models.Crate
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
 
-import java.lang.reflect.Type
 import java.text.DecimalFormat
 import java.util.ArrayList
 
@@ -35,7 +33,7 @@ class CrateNotifier : IntentService("CrateNotifier") {
             return
         }
         started = true
-        Utility.InitSaveLoad(this)
+        Utility.initSaveLoad(this)
 
         val thread = object : Thread() {
             override fun run() {
@@ -73,7 +71,7 @@ class CrateNotifier : IntentService("CrateNotifier") {
                     }
 
                     try {
-                        Thread.sleep((1000 * 60).toLong())
+                        sleep((1000 * 60).toLong())
                     } catch (e: InterruptedException) {
                         e.printStackTrace()
                     }
@@ -112,23 +110,23 @@ class CrateNotifier : IntentService("CrateNotifier") {
         DOWNLOADS, VERSION;
 
         internal fun getName(crate: Crate?): String {
-            when (this) {
-                DOWNLOADS -> return "Downloads changed: " + crate!!.name!!
-                VERSION -> return "Version changed: " + crate!!.name!!
-                else -> return ""
+            return when (this) {
+                DOWNLOADS -> "Downloads changed: " + crate!!.name!!
+                VERSION -> "Version changed: " + crate!!.name!!
+                else -> ""
             }
         }
 
         internal fun getDescription(crate: Crate?, oldCrate: Crate?): String {
-            when (this) {
+            return when (this) {
                 DOWNLOADS -> {
                     val df = DecimalFormat("#,##0")
                     val downloads = df.format(java.lang.Long.valueOf(crate!!.downloads.toLong()))
                     val oldDownloads = df.format(java.lang.Long.valueOf(oldCrate!!.downloads.toLong()))
-                    return crate.name + " now has " + downloads + " downloads was " + oldDownloads
+                    crate.name + " now has " + downloads + " downloads was " + oldDownloads
                 }
-                VERSION -> return "The version of " + crate!!.name + " changed to: " + crate.maxVersion + " was " + oldCrate!!.maxVersion
-                else -> return ""
+                VERSION -> "The version of " + crate!!.name + " changed to: " + crate.maxVersion + " was " + oldCrate!!.maxVersion
+                else -> ""
             }
         }
     }

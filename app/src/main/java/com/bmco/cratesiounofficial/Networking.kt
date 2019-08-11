@@ -1,33 +1,18 @@
 package com.bmco.cratesiounofficial
 
+import com.bmco.cratesiounofficial.Utility.ME
 import com.bmco.cratesiounofficial.models.Crate
 import com.bmco.cratesiounofficial.models.Dependency
-import com.bmco.cratesiounofficial.models.Summary
 import com.bmco.cratesiounofficial.models.User
 import com.bmco.cratesiounofficial.models.Version
-import com.fasterxml.jackson.core.JsonParseException
-import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.type.ArrayType
+import com.github.kittinunf.fuel.Fuel
 import com.loopj.android.http.AsyncHttpResponseHandler
-
-import org.json.JSONArray
+import cz.msebera.android.httpclient.Header
 import org.json.JSONException
 import org.json.JSONObject
-
 import java.io.IOException
-import java.util.ArrayList
-import java.util.Date
-import java.util.HashMap
-import java.util.Locale
-
-import cz.msebera.android.httpclient.Header
-
-import com.bmco.cratesiounofficial.Utility.ME
-import com.bmco.cratesiounofficial.Utility.SUMMARY
-import com.github.kittinunf.fuel.Fuel
-import com.github.kittinunf.fuel.httpGet
-import com.github.kittinunf.result.Result
+import java.util.*
 
 /**
  * Created by Bertus on 25-5-2017.
@@ -78,7 +63,7 @@ object Networking {
 
                     for (i in 0 until crates.length()) {
                         val jsonCrate = crates.getJSONObject(i).toString()
-                        val crate = mapper.readValue(jsonCrate, Crate::class.java!!)
+                        val crate = mapper.readValue(jsonCrate, Crate::class.java)
                         crate.getDependencies(null)
                         crateList.add(crate)
                     }
@@ -116,7 +101,7 @@ object Networking {
 
                     for (i in 0 until dependencies.length()) {
                         val jsonDependency = dependencies.getJSONObject(i).toString()
-                        val dependency = mapper.readValue(jsonDependency, Dependency::class.java!!)
+                        val dependency = mapper.readValue(jsonDependency, Dependency::class.java)
                         dependencyList.add(dependency)
                     }
                     cachedDependencies[id + version] = dependencyList
@@ -151,7 +136,7 @@ object Networking {
                     val crate = mapper.readValue(jsCrate.toString(), Crate::class.java)
                     val versions = ArrayList<Version>()
                     for (i in 0 until jsVersions.length()) {
-                        val version = mapper.readValue(jsVersions.getJSONObject(i).toString(), Version::class.java!!)
+                        val version = mapper.readValue(jsVersions.getJSONObject(i).toString(), Version::class.java)
                         versions.add(version)
                     }
                     getReadme(id, versions[0].num!!, {readme ->
@@ -183,9 +168,10 @@ object Networking {
         }
         val url = Utility.getAbsoluteUrl(String.format(Locale.US, Utility.README, id, version))
 
-        Fuel.get(url).response  { request, response, result ->
+        Fuel.get(url).response  { _, _, result ->
             val (bytes, error) = result
             if (bytes != null) {
+                cachedReadmes[id + version] = String(bytes)
                 success_result.invoke(String(bytes))
             }
             if (error != null) {
@@ -195,7 +181,7 @@ object Networking {
     }
 
     fun getCratesByUserId(userId: Int): List<Crate>? {
-        val url = String.format(Locale.US, Utility.CRATES_BY_USERID, userId)
+        val url = String.format(Locale.US, Utility.CRATES_BY_USER_ID, userId)
 
         val result = arrayOfNulls<String>(1)
         Utility.getSSL(Utility.getAbsoluteUrl(url), object : AsyncHttpResponseHandler() {
@@ -229,7 +215,7 @@ object Networking {
             val crates = ArrayList<Crate>()
 
             for (i in 0 until jsCrates.length()) {
-                crates.add(mapper.readValue(jsCrates.getJSONObject(i).toString(), Crate::class.java!!))
+                crates.add(mapper.readValue(jsCrates.getJSONObject(i).toString(), Crate::class.java))
             }
 
             return crates
