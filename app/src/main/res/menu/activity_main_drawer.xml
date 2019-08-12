@@ -32,7 +32,7 @@
         android:title="" />
 
     <item
-        android:id="@+id/logout_action"
+        android:id="@+id/action_logout"
         android:title="Logout"
         android:visible="false"
         android:icon="@drawable/ic_logout"/>

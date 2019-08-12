@@ -1,5 +1,7 @@
 package com.bmco.cratesiounofficial
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import com.bmco.cratesiounofficial.Utility.ME
 import com.bmco.cratesiounofficial.models.Crate
 import com.bmco.cratesiounofficial.models.Dependency
@@ -7,6 +9,7 @@ import com.bmco.cratesiounofficial.models.User
 import com.bmco.cratesiounofficial.models.Version
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.fuel.core.Method
 import com.loopj.android.http.AsyncHttpResponseHandler
 import cz.msebera.android.httpclient.Header
 import org.json.JSONException
@@ -28,7 +31,7 @@ object Networking {
               success_result: (user: User) -> Unit,
               error_result: (error: String) -> Unit) {
 
-        Fuel.get(Utility.getAbsoluteUrl(ME)).response { _, _, result ->
+        Fuel.get(Utility.getAbsoluteUrl(ME)).header("Authorization", token).response { _, _, result ->
             val (bytes, error) = result
             if (bytes != null) {
                 try {
@@ -38,6 +41,21 @@ object Networking {
                 } catch (e: JSONException) {
                     e.printStackTrace()
                 }
+            }
+            if (error != null) {
+                error_result.invoke(error.toString())
+            }
+        }
+    }
+
+    fun downloadImage(url: String,
+                      success_result: (bitmap: Bitmap) -> Unit,
+                      error_result: (error: String) -> Unit) {
+        Fuel.get(url).response { _, _, result ->
+            val (bytes, error) = result
+            if (bytes != null) {
+                val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                success_result.invoke(bitmap)
             }
             if (error != null) {
                 error_result.invoke(error.toString())
@@ -179,51 +197,38 @@ object Networking {
         }
     }
 
-    fun getCratesByUserId(userId: Int): List<Crate>? {
+    fun getCratesByUserId(userId: Int,
+                          success_result: (crates: List<Crate>) -> Unit,
+                          error_result: (error: String) -> Unit) {
         val url = Utility.getAbsoluteUrl(String.format(Locale.US, Utility.CRATES_BY_USER_ID, userId))
 
+        Fuel.get(url).response  { _, _, result ->
+            val (bytes, error) = result
+            if (bytes != null) {
+                try {
+                    val jResult = JSONObject(String(bytes))
+                    val jsCrates = jResult.getJSONArray("crates")
 
-        val result = arrayOfNulls<String>(1)
-        Utility.getSSL(url, object : AsyncHttpResponseHandler() {
-            override fun onSuccess(statusCode: Int, headers: Array<Header>, responseBody: ByteArray) {
-                if (responseBody.isNotEmpty()) {
-                    result[0] = String(responseBody)
-                } else {
-                    result[0] = "ERROR"
+                    val mapper = ObjectMapper()
+
+                    val crates = ArrayList<Crate>()
+
+                    for (i in 0 until jsCrates.length()) {
+                        crates.add(mapper.readValue(jsCrates.getJSONObject(i).toString(), Crate::class.java))
+                    }
+
+                    success_result.invoke(crates)
+                } catch (e: JSONException) {
+                    error_result.invoke(e.toString())
+                } catch (e: IOException) {
+                    error_result.invoke(e.toString())
                 }
             }
-
-            override fun onFailure(statusCode: Int, headers: Array<Header>, responseBody: ByteArray, error: Throwable) {
-                if (responseBody.isNotEmpty()) {
-                    result[0] = String(responseBody)
-                } else {
-                    result[0] = "ERROR"
-                }
+            if (error != null) {
+                error_result.invoke(error.toString())
             }
-        })
-
-        while (result[0] == null) {
-            //ignore
         }
 
-        try {
-            val jResult = JSONObject(result[0])
-            val jsCrates = jResult.getJSONArray("crates")
-
-            val mapper = ObjectMapper()
-
-            val crates = ArrayList<Crate>()
-
-            for (i in 0 until jsCrates.length()) {
-                crates.add(mapper.readValue(jsCrates.getJSONObject(i).toString(), Crate::class.java))
-            }
-
-            return crates
-        } catch (e: JSONException) {
-            return null
-        } catch (e: IOException) {
-            return null
-        }
 
     }
 }

@@ -29,6 +29,8 @@ class DashboardActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
 
+        title = "Dashboard"
+
         val actionBar = supportActionBar
         actionBar!!.setDisplayHomeAsUpEnabled(true)
         actionBar.setDisplayShowHomeEnabled(true)
@@ -40,31 +42,21 @@ class DashboardActivity : AppCompatActivity() {
 
         myCrates = findViewById(R.id.my_crates)
 
-        if (Utility.loadData<Any>("token", String::class.java) != null) {
+        if (Utility.loadData<String?>("token", String::class.java) != null) {
             profileUsername!!.text = MainActivity.currentUser.login
-            val thread = object : Thread() {
-                override fun run() {
-                    val thread = object : Thread() {
-                        override fun run() {
-                            val crates = Networking.getCratesByUserId(MainActivity.currentUser.id!!)
-                            myCrates!!.post {
-                                myCrates!!.layoutManager = LinearLayoutManager(this@DashboardActivity)
-                                myCrates!!.adapter = CrateRecyclerAdapter(this@DashboardActivity, crates!!)
-                                crateCount!!.text = NumberFormat.getNumberInstance().format(crates.size.toLong())
-                                var downloads = 0
-                                for (c in crates) {
-                                    downloads += c.downloads
-                                }
-                                crateDownloads!!.text = NumberFormat.getNumberInstance().format(downloads.toLong())
-                            }
-                        }
+            Networking.getCratesByUserId(MainActivity.currentUser.id!!, {crates ->
+                myCrates!!.post {
+                    myCrates!!.layoutManager = LinearLayoutManager(this@DashboardActivity)
+                    myCrates!!.adapter = CrateRecyclerAdapter(this@DashboardActivity, crates)
+                    crateCount!!.text = NumberFormat.getNumberInstance().format(crates.size.toLong())
+                    var downloads = 0
+                    for (c in crates) {
+                        downloads += c.downloads
                     }
-                    thread.start()
-                    profileImage!!.post { profileImage!!.setImageBitmap(MainActivity.avatar) }
+                    crateDownloads!!.text = NumberFormat.getNumberInstance().format(downloads.toLong())
                 }
-            }
-            thread.start()
-
+            }, { })
+            profileImage!!.setImageBitmap(MainActivity.avatar)
         }
     }
 

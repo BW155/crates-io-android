@@ -60,13 +60,13 @@ object Utility {
         settings = context.getSharedPreferences("data", Context.MODE_PRIVATE)
     }
 
-    fun saveData(key: String, value: Any) {
+    fun <T>saveData(key: String, value: T) {
         val data = Gson().toJson(value)
         settings!!.edit().putString(key, data).apply()
     }
 
     @Throws(JsonSyntaxException::class)
     fun <T> loadData(key: String, type: Type): T? {
-        return Gson().fromJson<Any>(settings!!.getString(key, ""), type) as T
+        return Gson().fromJson<Any>(settings!!.getString(key, ""), type) as? T
     }
 }

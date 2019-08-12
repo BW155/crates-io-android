@@ -21,6 +21,8 @@ class SubscribedActivity : AppCompatActivity() {
         setContentView(R.layout.activity_subscribed)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
+        title = "Subscribed"
+
         val recyclerView = findViewById<RecyclerView>(R.id.subscribed_recycler)
         recyclerView.layoutManager = LinearLayoutManager(this)
         val listType = object : TypeToken<ArrayList<Alert>>() {

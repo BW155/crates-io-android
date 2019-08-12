@@ -3,7 +3,6 @@ package com.bmco.cratesiounofficial.activities
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import com.google.android.material.navigation.NavigationView
@@ -36,12 +35,10 @@ import com.bmco.cratesiounofficial.interfaces.OnSummaryChangeListener
 import com.bmco.cratesiounofficial.models.Crate
 import com.bmco.cratesiounofficial.models.Summary
 import com.bmco.cratesiounofficial.models.User
-import com.loopj.android.http.AsyncHttpResponseHandler
 
 import java.io.IOException
 import java.text.DecimalFormat
 
-import cz.msebera.android.httpclient.Header
 import de.hdodenhof.circleimageview.CircleImageView
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -107,44 +104,31 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun loadNavProfile() {
         val login = menu!!.findItem(R.id.action_login)
         val profile = menu!!.findItem(R.id.action_dashboard)
-        val logout = menu!!.findItem(R.id.logout_action)
-        if (Utility.loadData<Any>("token", String::class.java) != null) {
-            val thread = object : Thread() {
-                override fun run() {
-                    try {
-                        Networking.getMe(Utility.loadData("token", String::class.java)!!, { user ->
-                            currentUser = user
-                            profileSection!!.post {
-                                if (profileSection!!.visibility == View.INVISIBLE) {
-                                    Toast.makeText(this@MainActivity, "Logged in as: " + user.login!!, Toast.LENGTH_LONG).show()
-                                }
-                                profileSection!!.visibility = View.VISIBLE
-                                profileUsername!!.text = user.login
-                                login.isVisible = false
-                                profile.isVisible = true
-                                logout.isVisible = true
-                            }
-                            Utility.getSSL(user.avatar!!, object : AsyncHttpResponseHandler() {
-                                override fun onSuccess(statusCode: Int, headers: Array<Header>, responseBody: ByteArray) {
-                                    val bitmap = BitmapFactory.decodeByteArray(responseBody, 0, responseBody.size)
-                                    avatar = bitmap
-                                    profileImage!!.post { profileImage!!.setImageBitmap(bitmap) }
-                                }
-
-                                override fun onFailure(statusCode: Int, headers: Array<Header>, responseBody: ByteArray, error: Throwable) {
-
-                                }
-                            })
-                            null
-                        }, { error -> null })
-
-                    } catch (e: IOException) {
-                        e.printStackTrace()
+        val logout = menu!!.findItem(R.id.action_logout)
+        if (Utility.loadData<String?>("token", String::class.java) != null) {
+            try {
+                Networking.getMe(Utility.loadData("token", String::class.java)!!, { user ->
+                    currentUser = user
+                    profileSection!!.post {
+                        if (profileSection!!.visibility == View.INVISIBLE) {
+                            Toast.makeText(this@MainActivity, "Logged in as: " + user.login!!, Toast.LENGTH_LONG).show()
+                        }
+                        profileSection!!.visibility = View.VISIBLE
+                        profileUsername!!.text = user.login
+                        login.isVisible = false
+                        profile.isVisible = true
+                        logout.isVisible = true
                     }
-
-                }
+                    Networking.downloadImage(user.avatar!!, {bitmap ->
+                        avatar = bitmap
+                        profileImage!!.post { profileImage!!.setImageBitmap(bitmap) }
+                    }, {
+                        /// todo: error message
+                    })
+                }, { })
+            } catch (e: IOException) {
+                e.printStackTrace()
             }
-            thread.start()
         } else {
             profileSection!!.visibility = View.INVISIBLE
             logout.isVisible = false
@@ -249,8 +233,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             startActivityForResult(intent, 200)
         }
 
-        if (id == R.id.logout_action) {
-            Utility.saveData("token", Any())
+        if (id == R.id.action_logout) {
+            Utility.saveData<String?>("token", null)
             this.loadNavProfile()
             Toast.makeText(this, "Logged out", Toast.LENGTH_LONG).show()
         }
