@@ -161,8 +161,10 @@ object Networking {
                         versions[0].readme = readme
                         crate.versionList = versions
                         success_result.invoke(crate)
-                    }, {error ->
-                        error_result.invoke(error)
+                    }, {err ->
+                        error_result.invoke(err)
+                        crate.versionList = versions
+                        success_result.invoke(crate)
                     })
                 } catch (e: JSONException) {
                     e.printStackTrace()

@@ -149,7 +149,7 @@ class CrateActivity : AppCompatActivity() {
                     versionList[0].readme
                 }
                 if (markdown.isNullOrEmpty()) {
-                    markdownView.setMarkDownText("#No Readme")
+                    markdownView.setMarkDownText("## No Readme")
                 } else {
                     markdownView.setMarkDownText(markdown)
                 }
