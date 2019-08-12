@@ -142,6 +142,7 @@ class CrateActivity : AppCompatActivity() {
             description.text = it.description
 
             val markdownView = findViewById<MarkdownView>(R.id.readme)
+            markdownView.isOpenUrlInBrowser = true
 
             if (it.versionList != null) {
                 val markdown = it.versionList?.let { versionList ->
