@@ -60,8 +60,7 @@ class CrateNotifier : IntentService("CrateNotifier") {
                                     }
 
                                     alertList!![i].crate = crate
-                                    null
-                                }, { error -> null })
+                                }, {  })
 
                             }
                             Utility.saveData("alerts", alertList!!)
@@ -86,8 +85,8 @@ class CrateNotifier : IntentService("CrateNotifier") {
         val title = type.getName(crate)
         val description = type.getDescription(crate, oldCrate)
 
-        val notiStyle = NotificationCompat.BigTextStyle()
-        notiStyle.bigText(description)
+        val notificationStyle = NotificationCompat.BigTextStyle()
+        notificationStyle.bigText(description)
 
         val notification = NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
@@ -95,7 +94,7 @@ class CrateNotifier : IntentService("CrateNotifier") {
                 .setContentText(description).setVibrate(longArrayOf(1000, 1000, 1000))
                 .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                 .setAutoCancel(true)
-                .setStyle(notiStyle)
+                .setStyle(notificationStyle)
                 .build()
 
         val mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -113,7 +112,6 @@ class CrateNotifier : IntentService("CrateNotifier") {
             return when (this) {
                 DOWNLOADS -> "Downloads changed: " + crate!!.name!!
                 VERSION -> "Version changed: " + crate!!.name!!
-                else -> ""
             }
         }
 
@@ -126,7 +124,6 @@ class CrateNotifier : IntentService("CrateNotifier") {
                     crate.name + " now has " + downloads + " downloads was " + oldDownloads
                 }
                 VERSION -> "The version of " + crate!!.name + " changed to: " + crate.maxVersion + " was " + oldCrate!!.maxVersion
-                else -> ""
             }
         }
     }

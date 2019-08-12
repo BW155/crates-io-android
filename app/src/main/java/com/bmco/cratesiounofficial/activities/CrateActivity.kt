@@ -12,6 +12,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.bmco.cratesiounofficial.Networking
 import com.bmco.cratesiounofficial.R
 import com.bmco.cratesiounofficial.Utility
@@ -38,6 +39,9 @@ class CrateActivity : AppCompatActivity() {
     private lateinit var description: TextView
     private lateinit var readme: MarkdownView
 
+    lateinit var dependencies: LinearLayout
+    lateinit var alertButton: SparkButton
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_crate)
@@ -54,90 +58,111 @@ class CrateActivity : AppCompatActivity() {
 
         val intent = intent
         val data = intent.data
-        if (data != null) {
+        data?.let {
             val path = data.toString().split("/".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
             val id = path[4]
             downloadCrateInfo(id)
-        } else {
-            crate = getIntent().getSerializableExtra("crate") as Crate
-            init()
-            downloadCrateInfo(crate!!.id)
+        } ?: run {
+            crate = getIntent().getSerializableExtra("crate") as? Crate
+            crate?.let {
+                init()
+                downloadCrateInfo(it.id)
+            } ?: run {
+                /// todo: error message
+            }
         }
     }
 
     private fun downloadCrateInfo(id: String?) {
-        Networking.getCrateById(id!!, { crate ->
-            if (crate != null) {
+        id?.let {
+            Networking.getCrateById(id, { crate ->
                 this.crate = crate
                 downloads.post { this.init() }
-            }
-            null
-        }, { error -> null })
+            }, {
+                /// todo: error message
+            })
+        } ?: run {
+            /// todo: error message
+        }
     }
 
     private fun init() {
-        title = crate!!.name
 
-        val alertButton = findViewById<SparkButton>(R.id.alert_button)
+        crate?.let {
+            title = it.name
 
-        val homepage = findViewById<FloatingTextButton>(R.id.home_link)
-        val repo = findViewById<FloatingTextButton>(R.id.rep_link)
-        val docs = findViewById<FloatingTextButton>(R.id.doc_link)
+            alertButton = findViewById(R.id.alert_button)
+            val homepage = findViewById<FloatingTextButton>(R.id.home_link)
+            val repo = findViewById<FloatingTextButton>(R.id.rep_link)
+            val docs = findViewById<FloatingTextButton>(R.id.doc_link)
+            dependencies = findViewById(R.id.dependency_group)
 
-        if (crate!!.homepage != null) {
-            homepage.setBackgroundColor(resources.getColor(R.color.colorPrimary))
-            homepage.setOnClickListener { v ->
-                val intent = Intent(Intent.ACTION_VIEW)
-                intent.data = Uri.parse(crate!!.homepage.toString())
-                startActivity(intent)
+            val color = ContextCompat.getColor(applicationContext, R.color.colorPrimary)
+
+            it.homepage.let { homePageUrl ->
+                homepage.setBackgroundColor(color)
+                homepage.setOnClickListener {
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(homePageUrl)
+                    startActivity(intent)
+                }
             }
-        }
 
-        if (crate!!.documentation != null) {
-            docs.setBackgroundColor(resources.getColor(R.color.colorPrimary))
-            docs.setOnClickListener { v ->
-                val intent = Intent(Intent.ACTION_VIEW)
-                intent.data = Uri.parse(crate!!.documentation.toString())
-                startActivity(intent)
+            it.documentation.let { documentationUrl ->
+                docs.setBackgroundColor(color)
+                docs.setOnClickListener {
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(documentationUrl)
+                    startActivity(intent)
+                }
             }
-        }
 
-        if (crate!!.repository != null) {
-            repo.setBackgroundColor(resources.getColor(R.color.colorPrimary))
-            repo.setOnClickListener { v ->
-                val intent = Intent(Intent.ACTION_VIEW)
-                intent.data = Uri.parse(crate!!.repository.toString())
-                startActivity(intent)
+            it.repository.let { repositoryUrl ->
+                repo.setBackgroundColor(color)
+                repo.setOnClickListener {
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(repositoryUrl)
+                    startActivity(intent)
+                }
             }
+
+            val df = DecimalFormat("#,##0")
+            downloads.text = df.format(java.lang.Long.valueOf(it.downloads.toLong()))
+            maxVersion.text = it.maxVersion
+
+            val format = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+            val formatter = SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss", Locale.getDefault())
+            try {
+                val date = formatter.parse(it.createdAt!!.substring(0, 18))
+                createdAt.text = format.format(date!!)
+            } catch (e: ParseException) {
+                e.printStackTrace()
+            }
+
+            description.text = it.description
+
+            val markdownView = findViewById<MarkdownView>(R.id.readme)
+
+            if (it.versionList != null) {
+                val markdown = it.versionList?.let { versionList ->
+                    versionList[0].readme
+                }
+                if (markdown.isNullOrEmpty()) {
+                    markdownView.setMarkDownText("#No Readme")
+                } else {
+                    markdownView.setMarkDownText(markdown)
+                }
+            } else {
+                markdownView.setMarkDownText("Loading...")
+            }
+
+            loadDependencies(it)
+            setupAlertButton(it)
         }
+    }
 
-        val df = DecimalFormat("#,##0")
-        downloads.text = df.format(java.lang.Long.valueOf(crate!!.downloads.toLong()))
-        maxVersion.text = crate!!.maxVersion
-
-        val format = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
-        val formatter = SimpleDateFormat("yyyy-MM-dd'T'kk:mm:ss", Locale.getDefault())
-        try {
-            val date = formatter.parse(crate!!.createdAt!!.substring(0, 18))
-            createdAt.text = format.format(date!!)
-        } catch (e: ParseException) {
-            e.printStackTrace()
-        }
-
-        description.text = crate!!.description
-
-        val markdownView = findViewById<MarkdownView>(R.id.readme)
-
-        if (crate!!.versionList != null) {
-            val markdown = crate!!.versionList!![0].readme
-            markdownView.setMarkDownText(markdown)
-        } else {
-            markdownView.setMarkDownText("Loading...")
-        }
-
-        val dependencies = findViewById<LinearLayout>(R.id.dependency_group)
-
-        crate!!.getDependencies(object: OnDependencyDownloadListener {
+    private fun loadDependencies(crate: Crate) {
+        crate.getDependencies(object: OnDependencyDownloadListener {
             override fun onDependenciesReady(dependency: List<Dependency>) {
                 for (d in dependency) {
                     val button = LayoutInflater.from(dependencies.context).inflate(R.layout.link_button, null) as FloatingTextButton
@@ -162,9 +187,9 @@ class CrateActivity : AppCompatActivity() {
                 }
             }
         })
+    }
 
-        val context = this
-
+    private fun setupAlertButton(crate: Crate) {
         var alerts: MutableList<Alert>?
         val listType = object : TypeToken<ArrayList<Alert>>() {
 
@@ -175,21 +200,21 @@ class CrateActivity : AppCompatActivity() {
         }
 
         for (alert in alerts) {
-            if (alert.crate!!.name == crate!!.name) {
+            if (alert.crate!!.name == crate.name) {
                 alertButton.isChecked = alert.isDownloads || alert.isVersion
                 break
             }
         }
 
         alertButton.setOnClickListener { v ->
-            val dialog = AlertDialog.Builder(context).create()
-            val view = LayoutInflater.from(context).inflate(R.layout.alert_activate_dialog, null)
+            val dialog = AlertDialog.Builder(this).create()
+            val view = LayoutInflater.from(this).inflate(R.layout.alert_activate_dialog, null)
             val downloads = view.findViewById<CheckBox>(R.id.downloads)
             val version = view.findViewById<CheckBox>(R.id.version)
             dialog.setView(view)
-            dialog.setButton(DialogInterface.BUTTON_POSITIVE, "Save") { dialog1, which ->
+            dialog.setButton(DialogInterface.BUTTON_POSITIVE, "Save") { _, _ ->
                 for (alert in alerts) {
-                    if (alert.crate!!.name == crate!!.name) {
+                    if (alert.crate!!.name == crate.name) {
                         alert.isDownloads = downloads.isChecked
                         alert.isVersion = version.isChecked
                         Utility.saveData("alerts", alerts)
@@ -210,7 +235,7 @@ class CrateActivity : AppCompatActivity() {
                 }
             }
             for (alert in alerts) {
-                if (alert.crate!!.name == crate!!.name) {
+                if (alert.crate!!.name == crate.name) {
                     downloads.isChecked = alert.isDownloads
                     version.isChecked = alert.isVersion
                     break

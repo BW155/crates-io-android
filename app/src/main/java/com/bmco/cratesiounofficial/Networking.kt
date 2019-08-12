@@ -28,7 +28,7 @@ object Networking {
               success_result: (user: User) -> Unit,
               error_result: (error: String) -> Unit) {
 
-        Fuel.get(Utility.getAbsoluteUrl(ME)).response { request, response, result ->
+        Fuel.get(Utility.getAbsoluteUrl(ME)).response { _, _, result ->
             val (bytes, error) = result
             if (bytes != null) {
                 try {
@@ -89,7 +89,7 @@ object Networking {
             success_result.invoke(cachedDependencies[id + version]!!)
         }
 
-        Fuel.get(url).response { request, response, result ->
+        Fuel.get(url).response { _, _, result ->
             val (bytes, error) = result
             if (bytes != null) {
                 try {
@@ -121,9 +121,9 @@ object Networking {
     fun getCrateById(id: String,
                      success_result: (crate: Crate) -> Unit,
                      error_result: (error: String) -> Unit) {
-        val url = String.format(Locale.US, Utility.CRATE, id)
+        val url = Utility.getAbsoluteUrl(String.format(Locale.US, Utility.CRATE, id))
 
-        Fuel.get(Utility.getAbsoluteUrl(url)).response { request, response, result ->
+        Fuel.get(url).response { _, _, result ->
             val (bytes, error) = result
             if (bytes != null) {
                 try {
@@ -140,7 +140,6 @@ object Networking {
                         versions.add(version)
                     }
                     getReadme(id, versions[0].num!!, {readme ->
-                        println("README: $readme")
                         versions[0].readme = readme
                         crate.versionList = versions
                         success_result.invoke(crate)
@@ -181,10 +180,11 @@ object Networking {
     }
 
     fun getCratesByUserId(userId: Int): List<Crate>? {
-        val url = String.format(Locale.US, Utility.CRATES_BY_USER_ID, userId)
+        val url = Utility.getAbsoluteUrl(String.format(Locale.US, Utility.CRATES_BY_USER_ID, userId))
+
 
         val result = arrayOfNulls<String>(1)
-        Utility.getSSL(Utility.getAbsoluteUrl(url), object : AsyncHttpResponseHandler() {
+        Utility.getSSL(url, object : AsyncHttpResponseHandler() {
             override fun onSuccess(statusCode: Int, headers: Array<Header>, responseBody: ByteArray) {
                 if (responseBody.isNotEmpty()) {
                     result[0] = String(responseBody)

@@ -36,7 +36,7 @@ class Crate : Serializable {
     @JsonProperty("documentation")
     @get:JsonProperty("documentation")
     @set:JsonProperty("documentation")
-    var documentation: Any? = null
+    var documentation: String? = null
     @JsonProperty("downloads")
     @get:JsonProperty("downloads")
     @set:JsonProperty("downloads")
@@ -48,7 +48,7 @@ class Crate : Serializable {
     @JsonProperty("homepage")
     @get:JsonProperty("homepage")
     @set:JsonProperty("homepage")
-    var homepage: Any? = null
+    var homepage: String? = null
     @JsonProperty("id")
     @get:JsonProperty("id")
     @set:JsonProperty("id")
