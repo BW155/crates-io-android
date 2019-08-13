@@ -9,9 +9,6 @@ import com.bmco.cratesiounofficial.models.User
 import com.bmco.cratesiounofficial.models.Version
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.kittinunf.fuel.Fuel
-import com.github.kittinunf.fuel.core.Method
-import com.loopj.android.http.AsyncHttpResponseHandler
-import cz.msebera.android.httpclient.Header
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
@@ -53,11 +50,11 @@ object Networking {
                       error_result: (error: String) -> Unit) {
         Fuel.get(url).response { _, _, result ->
             val (bytes, error) = result
-            if (bytes != null) {
+            bytes?.let {
                 val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
                 success_result.invoke(bitmap)
             }
-            if (error != null) {
+            error?.let {
                 error_result.invoke(error.toString())
             }
         }

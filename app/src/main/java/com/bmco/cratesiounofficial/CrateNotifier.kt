@@ -44,9 +44,9 @@ class CrateNotifier : IntentService("CrateNotifier") {
 
                         }.type
                         alertList = Utility.loadData<List<Alert>>("alerts", listType)
-                        if (alertList != null) {
-                            for (i in alertList!!.indices) {
-                                val alert = alertList!![i]
+                        alertList?.let {
+                            for (i in it.indices) {
+                                val alert = it[i]
 
                                 Networking.getCrateById(alert.crate!!.id!!, { crate ->
                                     if (alert.isDownloads) {
@@ -60,11 +60,11 @@ class CrateNotifier : IntentService("CrateNotifier") {
                                         }
                                     }
 
-                                    alertList!![i].crate = crate
+                                    it[i].crate = crate
                                 }, {  })
 
                             }
-                            Utility.saveData("alerts", alertList!!)
+                            Utility.saveData("alerts", it)
                         }
                     } catch (e: JsonSyntaxException) {
                         //ignore
