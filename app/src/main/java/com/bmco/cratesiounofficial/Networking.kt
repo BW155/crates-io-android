@@ -30,17 +30,17 @@ object Networking {
 
         Fuel.get(Utility.getAbsoluteUrl(ME)).header("Authorization", token).response { _, _, result ->
             val (bytes, error) = result
-            if (bytes != null) {
+            bytes?.let {
                 try {
-                    val jResult = JSONObject(String(bytes))
+                    val jResult = JSONObject(String(it))
                     val objectMapper = ObjectMapper()
                     success_result.invoke(objectMapper.readValue(jResult.getJSONObject("user").toString(), User::class.java))
                 } catch (e: JSONException) {
                     e.printStackTrace()
                 }
             }
-            if (error != null) {
-                error_result.invoke(error.toString())
+            error?.let {
+                error_result.invoke("$it")
             }
         }
     }
@@ -51,11 +51,11 @@ object Networking {
         Fuel.get(url).response { _, _, result ->
             val (bytes, error) = result
             bytes?.let {
-                val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
                 success_result.invoke(bitmap)
             }
             error?.let {
-                error_result.invoke(error.toString())
+                error_result.invoke("$it")
             }
         }
     }
@@ -68,9 +68,9 @@ object Networking {
 
         Fuel.get(url).response { _, _, result ->
             val (bytes, error) = result
-            if (bytes != null) {
+            bytes?.let {
                 try {
-                    val jResult = JSONObject(String(bytes))
+                    val jResult = JSONObject(String(it))
                     val crates = jResult.getJSONArray("crates")
 
                     val mapper = ObjectMapper()
@@ -89,8 +89,8 @@ object Networking {
                     e.printStackTrace()
                 }
             }
-            if (error != null) {
-                error_result.invoke(error.toString())
+            error?.let {
+                error_result.invoke("$it")
             }
         }
     }
@@ -106,9 +106,9 @@ object Networking {
 
         Fuel.get(url).response { _, _, result ->
             val (bytes, error) = result
-            if (bytes != null) {
+            bytes?.let {
                 try {
-                    val jResult = JSONObject(String(bytes))
+                    val jResult = JSONObject(String(it))
                     val dependencies = jResult.getJSONArray("dependencies")
 
                     val mapper = ObjectMapper()
@@ -127,8 +127,8 @@ object Networking {
                     e.printStackTrace()
                 }
             }
-            if (error != null) {
-                error_result.invoke(error.toString())
+            error?.let {
+                error_result.invoke("$it")
             }
         }
     }
@@ -140,9 +140,9 @@ object Networking {
 
         Fuel.get(url).response { _, _, result ->
             val (bytes, error) = result
-            if (bytes != null) {
+            bytes?.let {
                 try {
-                    val jResult = JSONObject(String(bytes))
+                    val jResult = JSONObject(String(it))
                     val jsCrate = jResult.getJSONObject("crate")
                     val jsVersions = jResult.getJSONArray("versions")
 
@@ -169,8 +169,8 @@ object Networking {
                     e.printStackTrace()
                 }
             }
-            if (error != null) {
-                error_result.invoke(error.toString())
+            error?.let {
+                error_result.invoke("$it")
             }
         }
     }
@@ -186,12 +186,13 @@ object Networking {
 
         Fuel.get(url).response  { _, _, result ->
             val (bytes, error) = result
-            if (bytes != null) {
-                cachedReadmes[id + version] = String(bytes)
-                success_result.invoke(String(bytes))
+            bytes?.let {
+                val str = String(it)
+                cachedReadmes[id + version] = str
+                success_result.invoke(str)
             }
-            if (error != null) {
-                error_result.invoke(error.toString())
+            error?.let {
+                error_result.invoke("$it")
             }
         }
     }
@@ -203,9 +204,9 @@ object Networking {
 
         Fuel.get(url).response  { _, _, result ->
             val (bytes, error) = result
-            if (bytes != null) {
+            bytes?.let {
                 try {
-                    val jResult = JSONObject(String(bytes))
+                    val jResult = JSONObject(String(it))
                     val jsCrates = jResult.getJSONArray("crates")
 
                     val mapper = ObjectMapper()
@@ -218,13 +219,13 @@ object Networking {
 
                     success_result.invoke(crates)
                 } catch (e: JSONException) {
-                    error_result.invoke(e.toString())
+                    error_result.invoke("$e")
                 } catch (e: IOException) {
-                    error_result.invoke(e.toString())
+                    error_result.invoke("$e")
                 }
             }
-            if (error != null) {
-                error_result.invoke(error.toString())
+            error?.let {
+                error_result.invoke("$it")
             }
         }
     }
