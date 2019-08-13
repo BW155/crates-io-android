@@ -111,7 +111,7 @@ class Crate : Serializable {
             Networking.getDependenciesForCrate(this.id!!, this.maxVersion!!, { dependencies ->
                 this@Crate.dependencies = dependencies
                 listener?.onDependenciesReady(dependencies)
-            }, {error ->
+            }, {
                 /// todo: error message
             })
         } else {
