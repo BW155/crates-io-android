@@ -103,8 +103,8 @@ object Networking {
                                 success_result: (dependencies: List<Dependency>) -> Unit,
                                 error_result: (error: String) -> Unit) {
         val url = Utility.getAbsoluteUrl(String.format(Locale.US, Utility.DEPENDENCIES, id, version))
-        if (cachedDependencies[id + version] != null) {
-            success_result.invoke(cachedDependencies[id + version]!!)
+        cachedDependencies[id + version]?.let {
+            success_result.invoke(it)
         }
 
         Fuel.get(url).response { _, _, result ->
@@ -182,10 +182,10 @@ object Networking {
                           version: String,
                           success_result: (readme: String) -> Unit,
                           error_result: (error: String) -> Unit) {
-        if (cachedReadmes[id + version] != null) {
-            success_result.invoke(cachedReadmes[id + version]!!)
-        }
         val url = Utility.getAbsoluteUrl(String.format(Locale.US, Utility.README, id, version))
+        cachedReadmes[id + version]?.let{
+            success_result.invoke(it)
+        }
 
         Fuel.get(url).response  { _, _, result ->
             val (bytes, error) = result
@@ -230,7 +230,5 @@ object Networking {
                 error_result.invoke(error.toString())
             }
         }
-
-
     }
 }

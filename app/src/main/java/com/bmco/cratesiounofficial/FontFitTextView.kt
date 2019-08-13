@@ -12,7 +12,7 @@ import android.util.TypedValue
 class FontFitTextView : androidx.appcompat.widget.AppCompatTextView {
 
     // Attributes
-    private var mTestPaint: Paint? = null
+    private lateinit var mTestPaint: Paint
     private var defaultTextSize: Float = 0.toFloat()
 
     constructor(context: Context) : super(context) {
@@ -25,7 +25,7 @@ class FontFitTextView : androidx.appcompat.widget.AppCompatTextView {
 
     private fun initialize() {
         mTestPaint = Paint()
-        mTestPaint!!.set(this.paint)
+        mTestPaint.set(this.paint)
         defaultTextSize = textSize
     }
 
@@ -44,9 +44,9 @@ class FontFitTextView : androidx.appcompat.widget.AppCompatTextView {
             return
 
         // text already fits with the xml-defined font size?
-        mTestPaint!!.set(this.paint)
-        mTestPaint!!.textSize = defaultTextSize
-        if (mTestPaint!!.measureText(text) <= targetWidth) {
+        mTestPaint.set(this.paint)
+        mTestPaint.textSize = defaultTextSize
+        if (mTestPaint.measureText(text) <= targetWidth) {
             this.setTextSize(TypedValue.COMPLEX_UNIT_PX, defaultTextSize)
             return
         }
@@ -57,8 +57,8 @@ class FontFitTextView : androidx.appcompat.widget.AppCompatTextView {
         val threshold = 0.5f // How close we have to be
         while (hi - lo > threshold) {
             val size = (hi + lo) / 2
-            mTestPaint!!.textSize = size
-            if (mTestPaint!!.measureText(text) >= targetWidth)
+            mTestPaint.textSize = size
+            if (mTestPaint.measureText(text) >= targetWidth)
                 hi = size // too big
             else
                 lo = size // too small

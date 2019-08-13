@@ -47,15 +47,16 @@ class CrateNotifier : IntentService("CrateNotifier") {
                         if (alertList != null) {
                             for (i in alertList!!.indices) {
                                 val alert = alertList!![i]
+
                                 Networking.getCrateById(alert.crate!!.id!!, { crate ->
                                     if (alert.isDownloads) {
                                         if (crate.downloads > alert.crate!!.downloads) {
-                                            alert(crate, alert.crate, AlertType.DOWNLOADS)
+                                            alert(crate, alert.crate!!, AlertType.DOWNLOADS)
                                         }
                                     }
                                     if (alert.isVersion) {
                                         if (crate.maxVersion != alert.crate!!.maxVersion) {
-                                            alert(crate, alert.crate, AlertType.VERSION)
+                                            alert(crate, alert.crate!!, AlertType.VERSION)
                                         }
                                     }
 
@@ -70,7 +71,7 @@ class CrateNotifier : IntentService("CrateNotifier") {
                     }
 
                     try {
-                        sleep((1000 * 60).toLong())
+                        sleep((1000 * 60 * 5).toLong())
                     } catch (e: InterruptedException) {
                         e.printStackTrace()
                     }
@@ -81,7 +82,7 @@ class CrateNotifier : IntentService("CrateNotifier") {
         thread.start()
     }
 
-    private fun alert(crate: Crate?, oldCrate: Crate?, type: AlertType) {
+    private fun alert(crate: Crate, oldCrate: Crate, type: AlertType) {
         val title = type.getName(crate)
         val description = type.getDescription(crate, oldCrate)
 
@@ -108,22 +109,22 @@ class CrateNotifier : IntentService("CrateNotifier") {
     enum class AlertType {
         DOWNLOADS, VERSION;
 
-        internal fun getName(crate: Crate?): String {
+        internal fun getName(crate: Crate): String {
             return when (this) {
-                DOWNLOADS -> "Downloads changed: " + crate!!.name!!
-                VERSION -> "Version changed: " + crate!!.name!!
+                DOWNLOADS -> "Downloads changed: " + crate.name!!
+                VERSION -> "Version changed: " + crate.name!!
             }
         }
 
-        internal fun getDescription(crate: Crate?, oldCrate: Crate?): String {
+        internal fun getDescription(crate: Crate, oldCrate: Crate): String {
             return when (this) {
                 DOWNLOADS -> {
                     val df = DecimalFormat("#,##0")
-                    val downloads = df.format(java.lang.Long.valueOf(crate!!.downloads.toLong()))
-                    val oldDownloads = df.format(java.lang.Long.valueOf(oldCrate!!.downloads.toLong()))
+                    val downloads = df.format(java.lang.Long.valueOf(crate.downloads.toLong()))
+                    val oldDownloads = df.format(java.lang.Long.valueOf(oldCrate.downloads.toLong()))
                     crate.name + " now has " + downloads + " downloads was " + oldDownloads
                 }
-                VERSION -> "The version of " + crate!!.name + " changed to: " + crate.maxVersion + " was " + oldCrate!!.maxVersion
+                VERSION -> "The version of " + crate.name + " changed to: " + crate.maxVersion + " was " + oldCrate.maxVersion
             }
         }
     }
