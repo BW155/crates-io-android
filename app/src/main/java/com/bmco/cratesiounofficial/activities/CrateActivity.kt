@@ -99,7 +99,7 @@ class CrateActivity : AppCompatActivity() {
 
             val color = ContextCompat.getColor(applicationContext, R.color.colorPrimary)
 
-            it.homepage.let { homePageUrl ->
+            it.homepage?.let { homePageUrl ->
                 homepage.setBackgroundColor(color)
                 homepage.setOnClickListener {
                     val intent = Intent(Intent.ACTION_VIEW)
@@ -108,7 +108,7 @@ class CrateActivity : AppCompatActivity() {
                 }
             }
 
-            it.documentation.let { documentationUrl ->
+            it.documentation?.let { documentationUrl ->
                 docs.setBackgroundColor(color)
                 docs.setOnClickListener {
                     val intent = Intent(Intent.ACTION_VIEW)
@@ -117,7 +117,7 @@ class CrateActivity : AppCompatActivity() {
                 }
             }
 
-            it.repository.let { repositoryUrl ->
+            it.repository?.let { repositoryUrl ->
                 repo.setBackgroundColor(color)
                 repo.setOnClickListener {
                     val intent = Intent(Intent.ACTION_VIEW)
