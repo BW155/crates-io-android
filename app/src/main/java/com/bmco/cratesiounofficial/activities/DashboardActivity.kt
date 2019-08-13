@@ -1,6 +1,5 @@
 package com.bmco.cratesiounofficial.activities
 
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.TextView
@@ -12,18 +11,11 @@ import com.bmco.cratesiounofficial.Networking
 import com.bmco.cratesiounofficial.R
 import com.bmco.cratesiounofficial.Utility
 import com.bmco.cratesiounofficial.recyclers.CrateRecyclerAdapter
-import com.loopj.android.http.AsyncHttpResponseHandler
-import cz.msebera.android.httpclient.Header
 import de.hdodenhof.circleimageview.CircleImageView
 import java.text.NumberFormat
 
 class DashboardActivity : AppCompatActivity() {
-
-    private var profileUsername: TextView? = null
-    private var crateCount: FontFitTextView? = null
-    private var crateDownloads: FontFitTextView? = null
-    private var profileImage: CircleImageView? = null
-    private var myCrates: RecyclerView? = null
+    private lateinit var myCrates: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,28 +27,25 @@ class DashboardActivity : AppCompatActivity() {
         actionBar!!.setDisplayHomeAsUpEnabled(true)
         actionBar.setDisplayShowHomeEnabled(true)
 
-        profileImage = findViewById(R.id.profile_image)
-        profileUsername = findViewById(R.id.profile_username)
-        crateCount = findViewById(R.id.crate_count)
-        crateDownloads = findViewById(R.id.crate_downloads)
+        val profileImage = findViewById<CircleImageView>(R.id.profile_image)
+        val profileUsername = findViewById<TextView>(R.id.profile_username)
+        val crateCount = findViewById<FontFitTextView>(R.id.crate_count)
+        val crateDownloads = findViewById<FontFitTextView>(R.id.crate_downloads)
 
         myCrates = findViewById(R.id.my_crates)
 
         if (Utility.loadData<String?>("token", String::class.java) != null) {
-            profileUsername!!.text = MainActivity.currentUser.login
+            profileUsername.text = MainActivity.currentUser.login
             Networking.getCratesByUserId(MainActivity.currentUser.id!!, {crates ->
-                myCrates!!.post {
-                    myCrates!!.layoutManager = LinearLayoutManager(this@DashboardActivity)
-                    myCrates!!.adapter = CrateRecyclerAdapter(this@DashboardActivity, crates)
-                    crateCount!!.text = NumberFormat.getNumberInstance().format(crates.size.toLong())
-                    var downloads = 0
-                    for (c in crates) {
-                        downloads += c.downloads
-                    }
-                    crateDownloads!!.text = NumberFormat.getNumberInstance().format(downloads.toLong())
+                myCrates.post {
+                    myCrates.layoutManager = LinearLayoutManager(this@DashboardActivity)
+                    myCrates.adapter = CrateRecyclerAdapter(this@DashboardActivity, crates)
+                    crateCount.text = NumberFormat.getNumberInstance().format(crates.size.toLong())
+                    val downloads = crates.sumBy { it.downloads }
+                    crateDownloads.text = NumberFormat.getNumberInstance().format(downloads.toLong())
                 }
             }, { })
-            profileImage!!.setImageBitmap(MainActivity.avatar)
+            profileImage.setImageBitmap(MainActivity.avatar)
         }
     }
 

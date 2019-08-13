@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bmco.cratesiounofficial.Networking
 import com.bmco.cratesiounofficial.R
@@ -27,12 +28,12 @@ class LoginActivity : AppCompatActivity() {
         apiToken = findViewById(R.id.api_token)
         val confirmButton = findViewById<Button>(R.id.confirm_button)
 
-        confirmButton.setOnClickListener { view ->
+        confirmButton.setOnClickListener {
             try {
                 Utility.saveData("token", apiToken!!.text.toString().trim { it <= ' ' })
-                Networking.getMe(apiToken!!.text.toString().trim { it <= ' ' }, { user ->
+                Networking.getMe(apiToken!!.text.toString().trim { it <= ' ' }, {
                     apiToken!!.post { this.finish() }
-                }, { })
+                }, { Toast.makeText(confirmButton.context, "Token Invalid", Toast.LENGTH_LONG).show() })
             } catch (e: IOException) {
                 e.printStackTrace()
             }
