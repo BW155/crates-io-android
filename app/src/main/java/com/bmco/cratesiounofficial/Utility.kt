@@ -4,12 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
-import com.loopj.android.http.AsyncHttpResponseHandler
-import org.apache.commons.io.IOUtils
-import java.io.IOException
 import java.lang.reflect.Type
-import java.net.HttpURLConnection
-import java.net.URL
 
 /**
  * Created by Bertus on 25-5-2017.
@@ -27,31 +22,6 @@ object Utility {
 
     private var settings: SharedPreferences? = null
 
-    fun getSSL(url: String, responseHandler: AsyncHttpResponseHandler) {
-        try {
-            val page = URL(url) // Process the URL far enough to find the right handler
-            val urlConnection = page.openConnection() as HttpURLConnection
-            val token = loadData<String>("token", String::class.java)
-            if (token != null) {
-                urlConnection.setRequestProperty("Authorization", token)
-            }
-            urlConnection.useCaches = false // Don't look at possibly cached data
-            // Read it all and print it out
-            val stream = urlConnection.inputStream
-            val bytes = IOUtils.toByteArray(stream)
-            val code = urlConnection.responseCode
-            if (code in 200..399) {
-                responseHandler.sendSuccessMessage(code, null, bytes)
-            } else {
-                responseHandler.sendFailureMessage(code, null, bytes, IOException())
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-            responseHandler.sendFailureMessage(0, null, ByteArray(1), e)
-        }
-
-    }
-
     fun getAbsoluteUrl(relativeUrl: String): String {
         return BASE_URL + relativeUrl
     }
@@ -67,6 +37,6 @@ object Utility {
 
     @Throws(JsonSyntaxException::class)
     fun <T> loadData(key: String, type: Type): T? {
-        return Gson().fromJson<Any>(settings!!.getString(key, ""), type) as? T
+        return Gson().fromJson(settings!!.getString(key, ""), type) as? T
     }
 }
