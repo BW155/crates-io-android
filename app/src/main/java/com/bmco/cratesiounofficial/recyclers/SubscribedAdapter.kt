@@ -3,18 +3,15 @@ package com.bmco.cratesiounofficial.recyclers
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-
-import com.bmco.cratesiounofficial.activities.CrateActivity
+import androidx.recyclerview.widget.RecyclerView
 import com.bmco.cratesiounofficial.R
 import com.bmco.cratesiounofficial.Utility
+import com.bmco.cratesiounofficial.activities.CrateActivity
 import com.bmco.cratesiounofficial.models.Alert
-import com.bmco.cratesiounofficial.models.Crate
-
 import ru.dimorinny.floatingtextbutton.FloatingTextButton
 
 /**
@@ -33,21 +30,23 @@ class SubscribedAdapter(private val context: Context, private val alerts: Mutabl
         val alert = alerts[position]
         val crate = alert.crate
 
-        val fab = holder.itemView.findViewById<FloatingTextButton>(R.id.delete_button)
-        val title = holder.itemView.findViewById<TextView>(R.id.crate_title)
+        crate?.let {
+            val fab = holder.itemView.findViewById<FloatingTextButton>(R.id.delete_button)
+            val title = holder.itemView.findViewById<TextView>(R.id.crate_title)
 
-        title.text = crate!!.name
+            title.text = crate.name
 
-        fab.setOnClickListener { v ->
-            alerts.removeAt(holder.adapterPosition)
-            notifyItemRemoved(holder.adapterPosition)
-            Utility.saveData("alerts", alerts)
-        }
+            fab.setOnClickListener {
+                alerts.removeAt(holder.adapterPosition)
+                notifyItemRemoved(holder.adapterPosition)
+                Utility.saveData("alerts", alerts)
+            }
 
-        holder.itemView.setOnClickListener { v ->
-            val intent = Intent(context, CrateActivity::class.java)
-            intent.putExtra("crate", crate)
-            context.startActivity(intent)
+            holder.itemView.setOnClickListener {
+                val intent = Intent(context, CrateActivity::class.java)
+                intent.putExtra("crate", crate)
+                context.startActivity(intent)
+            }
         }
     }
 

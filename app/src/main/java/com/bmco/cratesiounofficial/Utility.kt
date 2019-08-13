@@ -20,7 +20,7 @@ object Utility {
     var ME = "api/v1/me"
     var CRATES_BY_USER_ID = "api/v1/crates?user_id=%d" /// where 1: user id;
 
-    private var settings: SharedPreferences? = null
+    private lateinit var settings: SharedPreferences
 
     fun getAbsoluteUrl(relativeUrl: String): String {
         return BASE_URL + relativeUrl
@@ -32,11 +32,11 @@ object Utility {
 
     fun <T>saveData(key: String, value: T) {
         val data = Gson().toJson(value)
-        settings!!.edit().putString(key, data).apply()
+        settings.edit().putString(key, data).apply()
     }
 
     @Throws(JsonSyntaxException::class)
     fun <T> loadData(key: String, type: Type): T? {
-        return Gson().fromJson(settings!!.getString(key, ""), type) as? T
+        return Gson().fromJson(settings.getString(key, ""), type) as? T
     }
 }

@@ -39,9 +39,9 @@ class CrateRecyclerAdapter(private val context: Context, private val crates: Lis
         crateDescription.text = crate.description
         val df = DecimalFormat("#,##0")
         crateDownloads.text = df.format(java.lang.Long.valueOf(crate.downloads.toLong()))
-        crateMaxVersion.text = "v" + crate.maxVersion!!
+        crateMaxVersion.text = crate.maxVersion?.let { "v$it" } ?: run {"No Version"}
 
-        holder.itemView.setOnClickListener { v ->
+        holder.itemView.setOnClickListener {
             val intent = Intent(context, CrateActivity::class.java)
             intent.putExtra("crate", crate)
             context.startActivity(intent)

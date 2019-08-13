@@ -84,7 +84,7 @@ class Crate : Serializable {
     @JsonProperty("versions")
     @get:JsonProperty("versions")
     @set:JsonProperty("versions")
-    var versions: Any? = null
+    var versions: List<Version>? = null
     @JsonProperty("recent_downloads")
     @get:JsonProperty("recent_downloads")
     @set:JsonProperty("recent_downloads")
@@ -108,9 +108,7 @@ class Crate : Serializable {
 
     fun getDependencies(listener: OnDependencyDownloadListener?) {
         if (this.dependencies == null) {
-            val finalId = this.id
-            val finalVersion = this.maxVersion
-            Networking.getDependenciesForCrate(finalId!!, finalVersion!!, { dependencies ->
+            Networking.getDependenciesForCrate(this.id!!, this.maxVersion!!, { dependencies ->
                 this@Crate.dependencies = dependencies
                 listener?.onDependenciesReady(dependencies)
             }, {error ->
@@ -121,11 +119,4 @@ class Crate : Serializable {
         }
     }
 
-    fun compareForAlert(crate: Crate, type: CrateNotifier.AlertType): Boolean {
-        return when (type) {
-            CrateNotifier.AlertType.DOWNLOADS -> crate.downloads != this.downloads
-            CrateNotifier.AlertType.VERSION -> crate.maxVersion != this.maxVersion
-            else -> false
-        }
-    }
 }
