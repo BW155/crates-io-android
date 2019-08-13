@@ -31,7 +31,7 @@ class SubscribedActivity : AppCompatActivity() {
         val alerts = Utility.loadData<MutableList<Alert>>("alerts", listType)
 
         val emptyView = findViewById<TextView>(R.id.empty_view)
-        if (alerts == null || alerts.isEmpty()) {
+        if (alerts.isNullOrEmpty()) {
             recyclerView.visibility = View.GONE
             emptyView.visibility = View.VISIBLE
         } else {
