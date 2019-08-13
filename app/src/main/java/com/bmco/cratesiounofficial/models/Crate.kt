@@ -84,7 +84,7 @@ class Crate : Serializable {
     @JsonProperty("versions")
     @get:JsonProperty("versions")
     @set:JsonProperty("versions")
-    var versions: List<Version>? = null
+    var versions: List<Any>? = null
     @JsonProperty("recent_downloads")
     @get:JsonProperty("recent_downloads")
     @set:JsonProperty("recent_downloads")
