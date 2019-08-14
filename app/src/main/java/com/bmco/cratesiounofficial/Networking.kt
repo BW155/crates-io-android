@@ -82,7 +82,7 @@ object Networking {
                         crate.getDependencies(null)
                         crateList.add(crate)
                     }
-                    success_result.invoke(crateList)
+                    success_result.invoke(Utility.filterCrates(crateList))
                 } catch (e: JSONException) {
                     e.printStackTrace()
                 } catch (e: IOException) {
@@ -217,7 +217,7 @@ object Networking {
                         crates.add(mapper.readValue(jsCrates.getJSONObject(i).toString(), Crate::class.java))
                     }
 
-                    success_result.invoke(crates)
+                    success_result.invoke(Utility.filterCrates(crates))
                 } catch (e: JSONException) {
                     error_result.invoke("$e")
                 } catch (e: IOException) {

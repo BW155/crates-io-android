@@ -2,6 +2,7 @@ package com.bmco.cratesiounofficial
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.bmco.cratesiounofficial.models.Crate
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import java.lang.reflect.Type
@@ -38,5 +39,9 @@ object Utility {
     @Throws(JsonSyntaxException::class)
     fun <T> loadData(key: String, type: Type): T? {
         return Gson().fromJson(settings.getString(key, ""), type) as? T
+    }
+
+    fun filterCrates(crates: List<Crate>): List<Crate> {
+        return crates.filter { crate -> !crate.id.isNullOrEmpty() && !crate.maxVersion.isNullOrEmpty() }
     }
 }
