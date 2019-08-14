@@ -11,9 +11,13 @@ import android.util.Log
 
 class AutoStart : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        Log.d("CrateNotifier", "starting...")
-        val i = Intent(context, CrateNotifier::class.java)
-        context.startService(i)
-        Log.d("CrateNotifier", "started")
+        when (intent.action) {
+            Intent.ACTION_BOOT_COMPLETED -> {
+                Log.d("CrateNotifier", "starting...")
+                val i = Intent(context, CrateNotifier::class.java)
+                context.startService(i)
+                Log.d("CrateNotifier", "started")
+            }
+        }
     }
 }
