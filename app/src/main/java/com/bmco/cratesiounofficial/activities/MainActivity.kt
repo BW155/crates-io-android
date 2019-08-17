@@ -188,8 +188,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                     result!!.onResult(crate)
                                 }
                                 searchView!!.post { searchView!!.clearFocus() }
-                                null
-                            }, { error -> null })
+                            }, { })
                         }
                     }
                     searchThread.start()

@@ -7,19 +7,21 @@ package com.bmco.cratesiounofficial.recyclers
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-
-import com.bmco.cratesiounofficial.activities.CrateActivity
+import androidx.recyclerview.widget.RecyclerView
 import com.bmco.cratesiounofficial.R
+import com.bmco.cratesiounofficial.activities.CrateActivity
 import com.bmco.cratesiounofficial.models.Crate
-
 import java.text.DecimalFormat
 import java.util.ArrayList
-import java.util.Collections
+import kotlin.Comparator
+import kotlin.Int
+import kotlin.String
+import kotlin.let
+import kotlin.run
 
 /**
  * Created by Bertus on 25-5-2017.
