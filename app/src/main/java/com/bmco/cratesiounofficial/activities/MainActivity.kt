@@ -218,7 +218,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        val id = item.itemId
 
         return super.onOptionsItemSelected(item)
     }
@@ -247,7 +246,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             val dialog = AlertDialog.Builder(this).create()
             dialog.setTitle("About")
             dialog.setMessage(resources.getString(R.string.about))
-            dialog.setButton(DialogInterface.BUTTON_POSITIVE, "OKE") { dialog1, which -> dialog1.dismiss() }
+            dialog.setButton(DialogInterface.BUTTON_POSITIVE, "OKE") { dialog1, _ -> dialog1.dismiss() }
             dialog.show()
         }
 
