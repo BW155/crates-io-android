@@ -52,6 +52,10 @@ class CrateActivity : AppCompatActivity() {
         description = findViewById(R.id.crate_description)
         readme = findViewById(R.id.readme)
 
+        if (!Utility.saveLoadInitialized()) {
+            Utility.initSaveLoad(this)
+        }
+
         val actionBar = supportActionBar
         actionBar!!.setHomeButtonEnabled(true)
         actionBar.setDisplayHomeAsUpEnabled(true)
